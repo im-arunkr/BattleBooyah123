@@ -17,7 +17,7 @@ function ManageUsers() {
             if (!token) throw new Error('Authentication error. Please login again.');
             
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
-            const { data } = await axios.get(`http://localhost:5000/api/admin/users?search=${query}`, config);
+           const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/users?search=${query}`, config);
             setUsers(data);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch users.');
@@ -45,7 +45,7 @@ function ManageUsers() {
             try {
                 const token = localStorage.getItem('adminToken');
                 const config = { headers: { 'Authorization': `Bearer ${token}` } };
-                const { data } = await axios.delete(`http://localhost:5000/api/admin/users/${userIdToDelete}`, config);
+                const { data } = await axios.delete(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/users/${userIdToDelete}`, config);
                 setUsers(users.filter(user => user._id !== userIdToDelete));
                 setSuccess(data.message);
                 setTimeout(() => setSuccess(''), 3000);

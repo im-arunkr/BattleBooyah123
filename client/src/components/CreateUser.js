@@ -36,10 +36,10 @@ function CreateUser() {
             };
 
             const { data } = await axios.post(
-                'http://localhost:5000/api/admin/create-user',
-                { userId, mobileNumber, password, points }, // Password ko API request me bhejein
-                config
-            );
+    `${import.meta.env.VITE_SERVER_URL}/api/admin/create-user`,
+    { userId, mobileNumber, password, points },
+    config
+);
             
             setMessage(data.message);
             // Form fields ko reset karein

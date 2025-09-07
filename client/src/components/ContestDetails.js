@@ -38,7 +38,7 @@ const UpdateRoomForm = ({ contest, onContestUpdate }) => {
         e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' });
         try {
             const token = localStorage.getItem("adminToken"); const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.put(`http://localhost:5000/api/admin/contests/${contest._id}`, { roomDetails }, config);
+            const { data } = await axios.put(`${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contest._id}`, { roomDetails }, config);
             onContestUpdate(data.contest); setMessage({ type: 'success', text: 'Room details updated successfully!' });
         } catch (error) { setMessage({ type: 'error', text: error.response?.data?.message || 'Failed to update.' }); } finally { setLoading(false); }
     };
@@ -79,7 +79,7 @@ const UpdateContestForm = ({ contest, onContestUpdate, onCancel }) => {
         e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' });
         try {
             const token = localStorage.getItem("adminToken"); const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.put(`http://localhost:5000/api/admin/contests/${contest._id}`, formData, config);
+            const { data } = await axios.put(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contest._id}`, formData, config);
             onContestUpdate(data.contest); setMessage({ type: 'success', text: 'Contest updated successfully!' });
         } catch (error) { setMessage({ type: 'error', text: error.response?.data?.message || 'Failed to update contest.' }); } finally { setLoading(false); }
     };
@@ -162,7 +162,7 @@ const LeaderboardManager = ({ contest, onContestUpdate }) => {
         e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' });
         try {
             const token = localStorage.getItem("adminToken"); const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.post(`http://localhost:5000/api/admin/contests/${contest._id}/leaderboard`, { leaderboardData: leaderboard }, config);
+            const { data } = await axios.post(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contest._id}/leaderboard`, { leaderboardData: leaderboard }, config);
             onContestUpdate(data); 
             setMessage({ type: 'success', text: 'Leaderboard updated successfully!' });
         } catch (error) { 

@@ -27,7 +27,7 @@ function TransactionLogs() {
             }
             
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
-            const { data } = await axios.get(`http://localhost:5000/api/admin/transactions?search=${searchTerm}`, config);
+            const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/transactions?search=${searchTerm}`, config);
             setTransactions(data);
 
         } catch (err) {

@@ -26,7 +26,7 @@ function ManageBalance() {
             if (!token) throw new Error('Authentication error. Please login again.');
 
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
-            const { data } = await axios.get(`http://localhost:5000/api/admin/users?search=${searchTerm}`, config);
+           const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/users?search=${searchTerm}`, config);
             
             if (data && data.length > 0) {
                 setFoundUser(data[0]);
@@ -61,7 +61,7 @@ function ManageBalance() {
             
             // [FIX] Ab server ko 'points' bhejenge, 'amount' nahi
             const { data } = await axios.post(
-                'http://localhost:5000/api/admin/manage-balance', 
+                'http://${import.meta.env.VITE_SERVER_URL}/api/admin/manage-balance', 
                 { userId: foundUser.userId, points: numericPoints, action }, 
                 config
             );

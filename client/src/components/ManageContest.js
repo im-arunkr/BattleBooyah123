@@ -85,7 +85,7 @@ function ManageContest() {
                 if (!token) throw new Error("Authentication error.");
                 const config = { headers: { Authorization: `Bearer ${token}` } };
                 const params = new URLSearchParams({ statusFilter, gameMode, teamType: gameMode === "Battle Royale" ? teamType : "All" });
-                const { data } = await axios.get(`http://localhost:5000/api/admin/contests?${params.toString()}`, config);
+                const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/contests?${params.toString()}`, config);
                 setContests(data);
             } catch (err) {
                 setError(err.response?.data?.message || "Failed to fetch contests.");
@@ -114,7 +114,7 @@ function ManageContest() {
         try {
             const token = localStorage.getItem("adminToken");
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get(`http://localhost:5000/api/admin/contests/${contestId}`, config);
+            const { data } = await axios.get(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contestId}`, config);
             setSelectedContest(data);
         } catch (err) {
             setError(err.response?.data?.message || "Failed to fetch contest details.");

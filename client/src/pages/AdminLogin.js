@@ -20,7 +20,7 @@ function AdminLogin({ onLoginSuccess }) {
             };
             
             const { data } = await axios.post(
-                'http://localhost:5000/api/admin/login',
+                'http://${import.meta.env.VITE_SERVER_URL}/api/admin/login',
                 { username, password },
                 config
             );
