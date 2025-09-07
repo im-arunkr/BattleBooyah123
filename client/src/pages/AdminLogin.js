@@ -19,11 +19,11 @@ function AdminLogin({ onLoginSuccess }) {
                 },
             };
             
-            const { data } = await axios.post(
-                'http://${import.meta.env.VITE_SERVER_URL}/api/admin/login',
-                { username, password },
-                config
-            );
+          const { data } = await axios.post(
+    `${import.meta.env.VITE_SERVER_URL}/api/admin/login`,
+    { username, password },
+    config
+);
             
             // [FIX] Token ko sahi key 'adminToken' se save karna zaroori hai
             if (data.token) {
