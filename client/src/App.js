@@ -3,11 +3,8 @@ import AdminLogin from './pages/AdminLogin';
 import Dashboard from './pages/Dashboard';
 
 function App() {
-  // [FIX] Page load hone par check karein ki token localStorage me hai ya nahi.
-  // !!localStorage.getItem('adminToken') ka matlab hai:
-  // Agar token milta hai (string), to use true me badal do.
-  // Agar token nahi milta (null), to use false me badal do.
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('adminToken'));
+  // [FIX] Ab page load hone par sahi naam 'token' se check kiya jayega.
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
@@ -15,7 +12,7 @@ function App() {
 
   return (
     <div>
-      {/* Ab yeh check page refresh hone ke baad bhi kaam karega */}
+      {/* Ab yeh check page refresh hone ke baad bhi sahi se kaam karega */}
       {isLoggedIn ? (
         <Dashboard />
       ) : (
