@@ -26,7 +26,7 @@ function ManageBalance() {
             if (!token) throw new Error('Authentication error. Please login again.');
 
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
-           const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/users?search=${searchTerm}`, config);
+           const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users?search=${searchTerm}`, config);
             
             if (data && data.length > 0) {
                 setFoundUser(data[0]);

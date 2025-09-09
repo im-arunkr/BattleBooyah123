@@ -17,7 +17,7 @@ function ManageUsers() {
             if (!token) throw new Error('Authentication error. Please login again.');
             
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
-           const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/users?search=${query}`, config);
+           const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users?search=${query}`, config);
             setUsers(data);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch users.');

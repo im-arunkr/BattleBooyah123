@@ -105,7 +105,7 @@ function CreateBRContestForm({ mode, onBack }) {
         try {
             const token = localStorage.getItem('adminToken');
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
-           const { data } = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/admin/contests`, contestData, config);
+           const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/contests`, contestData, config);
             
             setMessage(data.message);
             // Form ko reset karein

@@ -19,8 +19,8 @@ function AdminLogin({ onLoginSuccess }) {
                 },
             };
             
-          const { data } = await axios.post(
-    `${import.meta.env.VITE_SERVER_URL}/api/admin/login`,
+const { data } = await axios.post(
+    `${process.env.REACT_APP_API_URL}/api/admin/login`, // <-- Yeh sahi tarika hai
     { username, password },
     config
 );

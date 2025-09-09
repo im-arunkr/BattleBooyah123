@@ -79,7 +79,7 @@ const UpdateContestForm = ({ contest, onContestUpdate, onCancel }) => {
         e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' });
         try {
             const token = localStorage.getItem("adminToken"); const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.put(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contest._id}`, formData, config);
+           const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/contests/${contest._id}`, formData, config);
             onContestUpdate(data.contest); setMessage({ type: 'success', text: 'Contest updated successfully!' });
         } catch (error) { setMessage({ type: 'error', text: error.response?.data?.message || 'Failed to update contest.' }); } finally { setLoading(false); }
     };
