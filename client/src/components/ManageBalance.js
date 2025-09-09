@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// [FIX] 'axios' ko hatakar 'api' ko import kiya gaya hai
+import api from '../api'; 
 import { Search, UserCheck } from 'lucide-react';
 
 function ManageBalance() {
@@ -7,7 +8,6 @@ function ManageBalance() {
     const [foundUser, setFoundUser] = useState(null);
     const [loading, setLoading] = useState(false);
     
-    // [FIX] Variable ka naam 'amount' se badalkar 'points' kar diya gaya hai
     const [points, setPoints] = useState(''); 
     const [action, setAction] = useState('add');
 
@@ -22,11 +22,9 @@ function ManageBalance() {
         setFoundUser(null);
 
         try {
-            const token = localStorage.getItem('adminToken');
-            if (!token) throw new Error('Authentication error. Please login again.');
-
-            const config = { headers: { 'Authorization': `Bearer ${token}` } };
-           const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users?search=${searchTerm}`, config);
+            // [FIX] Manual token handling aur config object hata diya gaya hai
+            // 'axios.get' ko 'api.get' se badal diya gaya hai
+            const { data } = await api.get(`/api/admin/users?search=${searchTerm}`);
             
             if (data && data.length > 0) {
                 setFoundUser(data[0]);
@@ -54,16 +52,11 @@ function ManageBalance() {
         setMessage('');
 
         try {
-            const token = localStorage.getItem('adminToken');
-            if (!token) throw new Error('Authentication error. Please login again.');
-
-            const config = { headers: { 'Authorization': `Bearer ${token}` } };
-            
-            // [FIX] Ab server ko 'points' bhejenge, 'amount' nahi
-            const { data } = await axios.post(
-                'http://${import.meta.env.VITE_SERVER_URL}/api/admin/manage-balance', 
-                { userId: foundUser.userId, points: numericPoints, action }, 
-                config
+            // [FIX] Manual token handling aur config object hata diya gaya hai
+            // 'axios.post' ko 'api.post' se badal diya gaya hai
+            const { data } = await api.post(
+                '/api/admin/manage-balance', 
+                { userId: foundUser.userId, points: numericPoints, action }
             );
             
             setMessage(data.message);
@@ -102,7 +95,7 @@ function ManageBalance() {
 
             {/* Display Found User and Manage Balance Form */}
             {foundUser && (
-                <div className="bg-gray-800/50 p-6 rounded-xl">
+                <div className="bg-gray-800/50 p-6 rounded-xl animate-fade-in">
                     <div className="flex items-center gap-3 border-b border-gray-700 pb-4 mb-4">
                         <UserCheck size={24} className="text-green-400" />
                         <div>
@@ -150,4 +143,3 @@ function ManageBalance() {
 }
 
 export default ManageBalance;
-

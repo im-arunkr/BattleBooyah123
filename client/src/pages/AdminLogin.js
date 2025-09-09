@@ -19,29 +19,39 @@ function AdminLogin({ onLoginSuccess }) {
                 },
             };
             
-const { data } = await axios.post(
-    `${process.env.REACT_APP_API_URL}/api/admin/login`, // <-- Yeh sahi tarika hai
-    { username, password },
-    config
-);
+            const { data } = await axios.post(
+                `${process.env.REACT_APP_API_URL}/api/admin/login`,
+                { username, password },
+                config
+            );
             
-            // [FIX] Token ko sahi key 'adminToken' se save karna zaroori hai
+            // --- YAHAN BADLAAV KIYA GAYA HAI ---
             if (data.token) {
-                localStorage.setItem('adminToken', data.token);
-                onLoginSuccess(); // App.js ko batao ki login ho gaya
+                // 1. Token ko browser ki memory (localStorage) mein save karein.
+                // Hum iska naam 'token' rakhenge.
+                localStorage.setItem('token', data.token);
+                
+                // 2. onLoginSuccess ko call karein taaki App ko pata chale.
+                onLoginSuccess();
+                
+                // 3. User ko admin dashboard par bhej dein.
+                // Agar aapke dashboard ka URL alag hai, to yahan badal dein.
+                window.location.href = '/dashboard';
+
             } else {
-                setError('Login failed: No token received from server.');
+                setError('Login nakam hua: Server se token nahi mila.');
             }
+            // --- BADLAAV KHATAM ---
 
         } catch (err) {
-            const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials.';
+            const errorMessage = err.response?.data?.message || 'Login nakam hua. Username ya password check karein.';
             setError(errorMessage);
         } finally {
             setLoading(false);
         }
     };
 
-    // --- JSX for the form ---
+    // --- Aapka JSX form (ismein koi badlaav nahi hai) ---
     return (
         <div style={{
             backgroundColor: '#0A0A0A', color: 'white', height: '100vh', display: 'flex',

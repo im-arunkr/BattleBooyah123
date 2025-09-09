@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+// [FIX] 'axios' ko hatakar 'api' ko import kiya gaya hai
+import api from '../api'; 
 import { ChevronDown, Tag, Star, Users, Map, Clock, Swords } from "lucide-react";
 import ContestDetails from './ContestDetails';
 
-// [MODIFIED] Contest List Item component with dynamic button logic
+// Contest List Item component with dynamic button logic
 const ContestListItem = ({ contest, onViewClick, status }) => {
     const percentFilled = Math.round(
         (contest.players.length / contest.totalParticipants) * 100
@@ -81,11 +82,10 @@ function ManageContest() {
             if (!contests.length) setLoading(true);
             setError("");
             try {
-                const token = localStorage.getItem("adminToken");
-                if (!token) throw new Error("Authentication error.");
-                const config = { headers: { Authorization: `Bearer ${token}` } };
+                // [FIX] Manual token handling aur config object hata diya gaya hai
                 const params = new URLSearchParams({ statusFilter, gameMode, teamType: gameMode === "Battle Royale" ? teamType : "All" });
-                const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/contests?${params.toString()}`, config);
+                // [FIX] 'axios.get' ko 'api.get' se badla gaya hai aur URL theek kiya gaya hai
+                const { data } = await api.get(`/api/admin/contests?${params.toString()}`);
                 setContests(data);
             } catch (err) {
                 setError(err.response?.data?.message || "Failed to fetch contests.");
@@ -102,7 +102,7 @@ function ManageContest() {
 
     useEffect(() => {
         fetchContests();
-    }, [statusFilter, gameMode, teamType]);
+    }, [fetchContests, statusFilter, gameMode, teamType]); // Added fetchContests to dependency array
 
     useEffect(() => {
         setTeamType("All");
@@ -112,9 +112,9 @@ function ManageContest() {
         setLoading(true);
         setError('');
         try {
-            const token = localStorage.getItem("adminToken");
-            const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.get(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contestId}`, config);
+            // [FIX] Manual token handling aur config object hata diya gaya hai
+            // [FIX] 'axios.get' ko 'api.get' se badla gaya hai aur URL theek kiya gaya hai
+            const { data } = await api.get(`/api/admin/contests/${contestId}`);
             setSelectedContest(data);
         } catch (err) {
             setError(err.response?.data?.message || "Failed to fetch contest details.");
@@ -128,7 +128,7 @@ function ManageContest() {
         fetchContests();
     };
 
-    if (loading) {
+    if (loading && !selectedContest && contests.length === 0) {
         return <p className="text-center text-gray-400 py-10">Loading...</p>;
     }
 

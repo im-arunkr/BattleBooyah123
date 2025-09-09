@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // [NEW] Axios ko import karein
+// [FIX] 'axios' ko hatakar 'api' ko import kiya gaya hai
+import api from '../api'; 
 import { ArrowLeft, User, Users, Shield } from 'lucide-react';
 
 // Team Type selection card ke liye component
@@ -73,7 +74,7 @@ function CreateBRContestForm({ mode, onBack }) {
     const [prizeBreakup, setPrizeBreakup] = useState('');
     const [bonusUsable, setBonusUsable] = useState('');
 
-    // [NEW] Loading aur messages ke liye state
+    // Loading aur messages ke liye state
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
@@ -103,9 +104,8 @@ function CreateBRContestForm({ mode, onBack }) {
         };
 
         try {
-            const token = localStorage.getItem('adminToken');
-            const config = { headers: { 'Authorization': `Bearer ${token}` } };
-           const { data } = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/contests`, contestData, config);
+            // [FIX] 'axios' ko 'api' se badla gaya aur manual token ko hataya gaya
+            const { data } = await api.post('/api/admin/contests', contestData);
             
             setMessage(data.message);
             // Form ko reset karein
@@ -228,7 +228,7 @@ function CreateBRContestForm({ mode, onBack }) {
                     {loading ? 'Creating...' : `Create ${teamType} Contest`}
                 </button>
                 
-                {/* [NEW] Success and Error messages */}
+                {/* Success and Error messages */}
                 {message && <p className="mt-4 text-center text-green-400">{message}</p>}
                 {error && <p className="mt-4 text-center text-red-500">{error}</p>}
             </form>
@@ -237,4 +237,3 @@ function CreateBRContestForm({ mode, onBack }) {
 }
 
 export default CreateBRContestForm;
-

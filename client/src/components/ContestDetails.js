@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+// [FIX] 'axios' ko hatakar 'api' ko import kiya gaya hai
+import api from '../api'; 
 import { ArrowLeft, PlusCircle, Trash2, Edit, Users } from 'lucide-react';
 
 // [UNCHANGED] PlayerList Component
@@ -34,14 +35,16 @@ const UpdateRoomForm = ({ contest, onContestUpdate }) => {
     const [message, setMessage] = useState({ type: '', text: '' });
     useEffect(() => { if (contest.roomDetails) { setRoomDetails({ roomId: contest.roomDetails.roomId || '', password: contest.roomDetails.password || '' }); } }, [contest]);
     const handleChange = (e) => { setRoomDetails({ ...roomDetails, [e.target.name]: e.target.value }); };
+    
     const handleSubmit = async (e) => {
         e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' });
         try {
-            const token = localStorage.getItem("adminToken"); const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.put(`${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contest._id}`, { roomDetails }, config);
+            // [FIX] 'axios' ko 'api' se badla gaya aur manual token ko hataya gaya
+            const { data } = await api.put(`/api/admin/contests/${contest._id}`, { roomDetails });
             onContestUpdate(data.contest); setMessage({ type: 'success', text: 'Room details updated successfully!' });
         } catch (error) { setMessage({ type: 'error', text: error.response?.data?.message || 'Failed to update.' }); } finally { setLoading(false); }
     };
+
     return (
         <div className="w-full max-w-lg mx-auto mt-6 p-4 bg-[#1e2746] border border-gray-700 rounded-lg">
             <h3 className="text-lg font-semibold text-white text-center mb-4">Quick Update: Room Details</h3>
@@ -75,14 +78,16 @@ const UpdateContestForm = ({ contest, onContestUpdate, onCancel }) => {
         const { name, value } = e.target;
         if (name === 'roomId' || name === 'password') { setFormData(prev => ({ ...prev, roomDetails: { ...prev.roomDetails, [name]: value } })); } else { setFormData(prev => ({ ...prev, [name]: value })); }
     };
+    
     const handleSubmit = async (e) => {
         e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' });
         try {
-            const token = localStorage.getItem("adminToken"); const config = { headers: { Authorization: `Bearer ${token}` } };
-           const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/contests/${contest._id}`, formData, config);
+            // [FIX] 'axios' ko 'api' se badla gaya aur manual token ko hataya gaya
+            const { data } = await api.put(`/api/admin/contests/${contest._id}`, formData);
             onContestUpdate(data.contest); setMessage({ type: 'success', text: 'Contest updated successfully!' });
         } catch (error) { setMessage({ type: 'error', text: error.response?.data?.message || 'Failed to update contest.' }); } finally { setLoading(false); }
     };
+
     return (
         <div className="w-full max-w-4xl mx-auto mt-8 p-6 bg-[#1e2746] border-2 border-blue-500 rounded-lg">
             <h3 className="text-xl font-semibold text-white text-center mb-6">Edit Full Contest Details</h3>
@@ -96,15 +101,15 @@ const UpdateContestForm = ({ contest, onContestUpdate, onCancel }) => {
                             <div><label className="text-sm font-medium text-gray-300">Total Prize</label><input type="number" name="totalPrize" value={formData.totalPrize} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
                         </div>
                          <div className="grid grid-cols-2 gap-4">
-                             <div><label className="text-sm font-medium text-gray-300">Per Kill Reward</label><input type="number" name="perKillReward" value={formData.perKillReward} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
-                             <div><label className="text-sm font-medium text-gray-300">Participants</label><input type="number" name="totalParticipants" value={formData.totalParticipants} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
+                            <div><label className="text-sm font-medium text-gray-300">Per Kill Reward</label><input type="number" name="perKillReward" value={formData.perKillReward} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
+                            <div><label className="text-sm font-medium text-gray-300">Participants</label><input type="number" name="totalParticipants" value={formData.totalParticipants} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
                         </div>
                     </div>
                     <div className="space-y-4">
-                         <div><label className="text-sm font-medium text-gray-300">Map</label><input type="text" name="map" value={formData.map} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
+                        <div><label className="text-sm font-medium text-gray-300">Map</label><input type="text" name="map" value={formData.map} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
                         <div><label className="text-sm font-medium text-gray-300">Prize Breakup (e.g., #1:500,#2:300)</label><textarea name="prizeBreakup" value={formData.prizeBreakup} onChange={handleChange} rows="3" className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600"></textarea></div>
                         <div className="grid grid-cols-2 gap-4">
-                             <div><label className="text-sm font-medium text-gray-300">Room ID</label><input type="text" name="roomId" value={formData.roomDetails?.roomId || ''} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
+                            <div><label className="text-sm font-medium text-gray-300">Room ID</label><input type="text" name="roomId" value={formData.roomDetails?.roomId || ''} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
                             <div><label className="text-sm font-medium text-gray-300">Room Password</label><input type="text" name="password" value={formData.roomDetails?.password || ''} onChange={handleChange} className="w-full mt-1 p-2 bg-gray-800 rounded-md text-white border border-gray-600" /></div>
                         </div>
                     </div>
@@ -119,17 +124,15 @@ const UpdateContestForm = ({ contest, onContestUpdate, onCancel }) => {
     );
 };
 
-// [FINAL FIX] LeaderboardManager Component with corrected 'userId' field
+// [UNCHANGED] LeaderboardManager Component with corrected 'userId' field
 const LeaderboardManager = ({ contest, onContestUpdate }) => {
     const hasExistingLeaderboard = contest.leaderboard && contest.leaderboard.length > 0;
-    
     const [leaderboard, setLeaderboard] = useState([]);
     const [isEditing, setIsEditing] = useState(!hasExistingLeaderboard);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     
     useEffect(() => {
-        // Corrected initialRow to use 'userId'
         const initialRow = { rank: 1, userId: '', gameUsername: '', kills: 0, prize: 0 };
         const existingData = contest.leaderboard && contest.leaderboard.length > 0 ? contest.leaderboard : [initialRow];
         setLeaderboard(existingData);
@@ -147,7 +150,6 @@ const LeaderboardManager = ({ contest, onContestUpdate }) => {
             setMessage({type: 'error', text: 'You can add a maximum of 50 ranks.'});
             return;
         }
-        // Corrected new row to use 'userId'
         setLeaderboard([...leaderboard, { rank: leaderboard.length + 1, userId: '', gameUsername: '', kills: 0, prize: 0 }]);
     };
 
@@ -161,8 +163,8 @@ const LeaderboardManager = ({ contest, onContestUpdate }) => {
     const handleSubmit = async (e) => {
         e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' });
         try {
-            const token = localStorage.getItem("adminToken"); const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.post(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/contests/${contest._id}/leaderboard`, { leaderboardData: leaderboard }, config);
+            // [FIX] 'axios' ko 'api' se badla gaya aur manual token ko hataya gaya
+            const { data } = await api.post(`/api/admin/contests/${contest._id}/leaderboard`, { leaderboardData: leaderboard });
             onContestUpdate(data); 
             setMessage({ type: 'success', text: 'Leaderboard updated successfully!' });
         } catch (error) { 
@@ -187,7 +189,6 @@ const LeaderboardManager = ({ contest, onContestUpdate }) => {
                 {leaderboard.map((row) => (
                     <div key={row.rank} className="grid grid-cols-12 gap-2 mb-1 items-center bg-gray-800/50 p-2 rounded">
                         <div className="col-span-1 font-bold">{row.rank}</div>
-                        {/* Corrected property to display: row.userId */}
                         <div className="col-span-3">{row.userId}</div> 
                         <div className="col-span-3">{row.gameUsername}</div>
                         <div className="col-span-2 text-center">{row.kills}</div>
@@ -220,7 +221,6 @@ const LeaderboardManager = ({ contest, onContestUpdate }) => {
                 {leaderboard.map((row, index) => (
                     <div key={index} className="grid grid-cols-12 gap-2 mb-2 items-center">
                         <input type="number" name="rank" value={row.rank} onChange={e => handleInputChange(index, e)} placeholder="#" className="col-span-1 p-2 bg-gray-800 rounded border border-gray-600" />
-                        {/* Corrected name and value for the input */}
                         <input type="text" name="userId" value={row.userId} onChange={e => handleInputChange(index, e)} placeholder="Website UserID" className="col-span-3 p-2 bg-gray-800 rounded border border-gray-600" />
                         <input type="text" name="gameUsername" value={row.gameUsername} onChange={e => handleInputChange(index, e)} placeholder="Game Username" className="col-span-3 p-2 bg-gray-800 rounded border border-gray-600" />
                         <input type="number" name="kills" value={row.kills} onChange={e => handleInputChange(index, e)} placeholder="Kills" className="col-span-2 p-2 bg-gray-800 rounded border border-gray-600" />
@@ -319,4 +319,3 @@ function ContestDetails({ contest, onBack }) {
 }
 
 export default ContestDetails;
-

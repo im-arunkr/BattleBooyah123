@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
+// [FIX] 'axios' ko hatakar 'api' ko import kiya gaya hai
+import api from '../api'; 
 import { Trash2, Edit, Search, FileClock, X } from 'lucide-react'; // Icons for actions
 
 function ManageUsers() {
@@ -13,11 +14,9 @@ function ManageUsers() {
         setLoading(true);
         setError('');
         try {
-            const token = localStorage.getItem('adminToken');
-            if (!token) throw new Error('Authentication error. Please login again.');
-            
-            const config = { headers: { 'Authorization': `Bearer ${token}` } };
-           const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users?search=${query}`, config);
+            // [FIX] Manual token handling aur config object hata diya gaya hai
+            // 'axios.get' ko 'api.get' se badla gaya hai aur URL theek kiya gaya hai
+            const { data } = await api.get(`/api/admin/users?search=${query}`);
             setUsers(data);
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to fetch users.');
@@ -41,11 +40,13 @@ function ManageUsers() {
     };
     
     const handleDeleteUser = async (userIdToDelete) => {
+        // NOTE: window.confirm might not work in all environments (like iframes).
+        // Consider replacing this with a custom modal in the future.
         if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
             try {
-                const token = localStorage.getItem('adminToken');
-                const config = { headers: { 'Authorization': `Bearer ${token}` } };
-                const { data } = await axios.delete(`http://${import.meta.env.VITE_SERVER_URL}/api/admin/users/${userIdToDelete}`, config);
+                // [FIX] Manual token handling aur config object hata diya gaya hai
+                // 'axios.delete' ko 'api.delete' se badla gaya hai aur URL theek kiya gaya hai
+                const { data } = await api.delete(`/api/admin/users/${userIdToDelete}`);
                 setUsers(users.filter(user => user._id !== userIdToDelete));
                 setSuccess(data.message);
                 setTimeout(() => setSuccess(''), 3000);
@@ -58,6 +59,7 @@ function ManageUsers() {
     };
     
     const viewTransactions = (userId) => {
+        // This is a placeholder. You might want to navigate to a new page or open a modal here.
         alert(`Viewing transaction history for user: ${userId}`);
     };
 
@@ -108,7 +110,6 @@ function ManageUsers() {
                             <tr>
                                 <th className="p-4 text-sm font-semibold text-gray-300 uppercase tracking-wider">User ID</th>
                                 <th className="p-4 text-sm font-semibold text-gray-300 uppercase tracking-wider">Mobile Number</th>
-                                {/* [FIXED] 'Balance' ko 'Points' se replace kiya gaya */}
                                 <th className="p-4 text-sm font-semibold text-gray-300 uppercase tracking-wider">Points</th>
                                 <th className="p-4 text-sm font-semibold text-gray-300 uppercase tracking-wider">Transactions</th>
                                 <th className="p-4 text-sm font-semibold text-gray-300 uppercase tracking-wider">Actions</th>
@@ -120,7 +121,6 @@ function ManageUsers() {
                                     <tr key={user._id} className="hover:bg-gray-800 transition-colors">
                                         <td className="p-4 text-white font-medium">{user.userId}</td>
                                         <td className="p-4 text-gray-300">{user.mobileNumber}</td>
-                                        {/* [FIXED] user.balance ki jagah user.points */}
                                         <td className="p-4 text-green-400 font-semibold">{user.points}</td>
                                         <td className="p-4">
                                             <button onClick={() => viewTransactions(user.userId)} className="text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-2 text-sm">
@@ -151,4 +151,3 @@ function ManageUsers() {
 }
 
 export default ManageUsers;
-

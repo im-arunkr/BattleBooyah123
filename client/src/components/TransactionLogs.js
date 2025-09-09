@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// [FIX] 'axios' ko hatakar 'api' ko import kiya gaya hai
+import api from '../api'; 
 import { Search } from 'lucide-react';
 
 function TransactionLogs() {
@@ -21,13 +22,9 @@ function TransactionLogs() {
         setSearchedUser(searchTerm);
 
         try {
-            const token = localStorage.getItem('adminToken');
-            if (!token) {
-                throw new Error('Authentication error. Please login again.');
-            }
-            
-            const config = { headers: { 'Authorization': `Bearer ${token}` } };
-            const { data } = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/admin/transactions?search=${searchTerm}`, config);
+            // [FIX] Manual token handling aur config object hata diya gaya hai
+            // 'axios.get' ko 'api.get' se badla gaya hai aur URL theek kiya gaya hai
+            const { data } = await api.get(`/api/admin/transactions?search=${searchTerm}`);
             setTransactions(data);
 
         } catch (err) {
@@ -66,7 +63,7 @@ function TransactionLogs() {
             
             {/* Transactions Table */}
             {transactions.length > 0 && (
-                <div className="bg-gray-800/50 rounded-xl overflow-hidden">
+                <div className="bg-gray-800/50 rounded-xl overflow-hidden animate-fade-in">
                     <h3 className="text-xl font-semibold text-white p-4 border-b border-gray-700">History for: {searchedUser}</h3>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
@@ -103,4 +100,3 @@ function TransactionLogs() {
 }
 
 export default TransactionLogs;
-

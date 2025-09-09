@@ -7,10 +7,10 @@ import CreateContest from '../components/CreateContest';
 import CreateUser from '../components/CreateUser';
 import ManageUsers from '../components/ManageUsers';
 import ManageBalance from '../components/ManageBalance';
-import ManageLeaderboard from '../components/ManageLeaderboard';
+// import ManageLeaderboard from '../components/ManageLeaderboard'; // Assuming this component exists
 import ManageContest from '../components/ManageContest';
 import TransactionLogs from '../components/TransactionLogs';
-import SendNotification from '../components/SendNotification';
+// import SendNotification from '../components/SendNotification'; // Assuming this component exists
 
 // Card ke liye ek alag component
 const DashboardCard = ({ title, description, icon, onClick, color }) => {
@@ -18,8 +18,8 @@ const DashboardCard = ({ title, description, icon, onClick, color }) => {
         <button 
             onClick={onClick}
             className="bg-[#121223] rounded-2xl p-6 text-left w-full h-full shadow-md 
-                       border border-gray-700/40 transition-transform duration-300 
-                       hover:-translate-y-2 hover:shadow-xl"
+                     border border-gray-700/40 transition-transform duration-300 
+                     hover:-translate-y-2 hover:shadow-xl"
         >
             <div className="flex items-center gap-3 mb-4">
                 <div className={`p-2 rounded-md ${color}`}>
@@ -35,10 +35,10 @@ const DashboardCard = ({ title, description, icon, onClick, color }) => {
 function Dashboard() {
     const [activeSection, setActiveSection] = useState('home');
 
-    // [NEW] Logout ke liye function
+    // Logout ke liye function
     const handleLogout = () => {
-        // Token ko localStorage se remove karein
-        localStorage.removeItem('adminToken');
+        // [FIX] 'adminToken' ki jagah sahi key 'token' ko localStorage se remove kiya gaya hai
+        localStorage.removeItem('token');
         // Page ko reload karein taki user login page par redirect ho jaye
         window.location.reload();
     };
@@ -46,7 +46,7 @@ function Dashboard() {
     const renderMainContent = () => {
         if (activeSection === 'home') {
             return (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
                     <DashboardCard 
                         title="Create User ID"
                         description="This section allows admin to create a new user with username and password."
@@ -89,6 +89,7 @@ function Dashboard() {
                         onClick={() => setActiveSection('transaction-logs')}
                         color="bg-gradient-to-r from-orange-400 to-yellow-600"
                     />
+                    {/*
                     <DashboardCard 
                         title="Send Notification"
                         description="Send broadcast messages or alerts to all users."
@@ -96,6 +97,7 @@ function Dashboard() {
                         onClick={() => setActiveSection('send-notification')}
                         color="bg-gradient-to-r from-pink-400 to-purple-500"
                     />
+                    */}
                 </div>
             );
         }
@@ -107,8 +109,8 @@ function Dashboard() {
             case 'manage-balance': return <ManageBalance />;
             case 'manage-users': return <ManageUsers />;
             case 'transaction-logs': return <TransactionLogs />;
-            case 'send-notification': return <SendNotification />;
-            case 'manage-leaderboard': return <ManageLeaderboard />;
+            // case 'send-notification': return <SendNotification />;
+            // case 'manage-leaderboard': return <ManageLeaderboard />;
             default: return null;
         }
     };
@@ -136,7 +138,7 @@ function Dashboard() {
                             <span className="text-gray-300"> — Battle Arena</span>
                         </h1>
                     </div>
-                    {/* [NEW] Logout Button */}
+                    {/* Logout Button */}
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 rounded-lg bg-red-500/20 px-4 py-2 text-sm font-semibold text-red-400 transition-colors hover:bg-red-500/30 hover:text-red-300"
@@ -155,4 +157,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
