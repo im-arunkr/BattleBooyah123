@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api"; // UPDATED: Now imports our smart api helper
 import {
   User, Lock, Wallet, LogOut, Loader2, ArrowLeft, CreditCard, CheckCircle2, AlertCircle
 } from "lucide-react";
@@ -21,15 +21,12 @@ const UserAccountPage = () => {
   const [transactions, setTransactions] = useState([]);
   const [transactionsLoading, setTransactionsLoading] = useState(false);
 
-  const api = axios.create({
-    headers: { Authorization: `Bearer ${localStorage.getItem('user_token')}` },
-  });
-
   // Fetch initial user data
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await api.get("http://localhost:5000/api/users/me");
+        // UPDATED: API call now uses the 'api' helper
+        const response = await api.get("/api/users/me");
         setUser(response.data);
       } catch (error) {
         console.error("Failed to fetch user data", error);
@@ -48,7 +45,8 @@ const UserAccountPage = () => {
       if (activeTab === 'transactions' && transactions.length === 0) {
         setTransactionsLoading(true);
         try {
-          const response = await api.get("http://localhost:5000/api/users/my-transactions");
+          // UPDATED: API call now uses the 'api' helper
+          const response = await api.get("/api/users/my-transactions");
           setTransactions(response.data);
         } catch (error) {
           console.error("Failed to fetch transactions", error);
@@ -58,7 +56,7 @@ const UserAccountPage = () => {
       }
     };
     fetchTransactions();
-  }, [activeTab, api]);
+  }, [activeTab]);
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -71,7 +69,8 @@ const UserAccountPage = () => {
       return;
     }
     try {
-      const response = await api.post("http://localhost:5000/api/users/change-password", {
+      // UPDATED: API call now uses the 'api' helper
+      const response = await api.post("/api/users/change-password", {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       });

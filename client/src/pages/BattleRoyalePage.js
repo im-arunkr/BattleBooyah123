@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api"; // Correctly uses the api helper
 import {
   Wallet,
-  LogOut,
   Loader2,
-  User,
   Swords,
-  PlusSquare,
   Tag,
   Star,
   Users,
   MapPin,
   Clock,
-  ListChecks,
-  Gamepad2,
-  Trophy,
-  Home,
 } from "lucide-react";
-import BottomNav from "../components/BottomNav"; // <-- (1) BottomNav COMPONENT KO IMPORT KIYA GAYA HAI
+import BottomNav from "../components/BottomNav";
 
 // --- Ultra-Compact Contest Card component ---
 const ContestCard = ({ contest }) => {
@@ -112,7 +105,11 @@ const ContestCard = ({ contest }) => {
       </div>
       <Link
         to={`/contest/${contest._id}`}
-        className={`w-full block text-center mt-auto font-bold py-0.5 text-sm transition-colors rounded-b-xl ${isFull ? "bg-gray-700 text-gray-500 cursor-not-allowed" : "bg-gradient-to-r from-green-500 to-teal-500 text-white hover:opacity-90"}`}
+        className={`w-full block text-center mt-auto font-bold py-0.5 text-sm transition-colors rounded-b-xl ${
+          isFull
+            ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+            : "bg-gradient-to-r from-green-500 to-teal-500 text-white hover:opacity-90"
+        }`}
         onClick={(e) => isFull && e.preventDefault()}
       >
         {isFull ? "Full" : "View"}
@@ -123,7 +120,6 @@ const ContestCard = ({ contest }) => {
 
 const BattleRoyalePage = () => {
   const navigate = useNavigate();
-
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedMode, setSelectedMode] = useState("Solo");
@@ -131,27 +127,22 @@ const BattleRoyalePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("user_token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-      const api = axios.create({
-        headers: { Authorization: `Bearer ${token}` },
-      });
       try {
+        // --- THIS IS THE UPDATED PART ---
+        // API calls now use the 'api' helper, which sets the base URL and token automatically.
         const [userResponse, contestsResponse] = await Promise.all([
-          api.get("http://localhost:5000/api/users/me"),
-          api.get("http://localhost:5000/api/contests/battle-royale"),
+          api.get("/api/users/me"),
+          api.get("/api/contests/battle-royale"),
         ]);
 
         setUser(userResponse.data);
         setContests(contestsResponse.data);
-        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch data", error);
         localStorage.removeItem("user_token");
         navigate("/login");
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -160,13 +151,13 @@ const BattleRoyalePage = () => {
   const filteredContests = contests.filter((c) => c.teamType === selectedMode);
 
   const customStyles = `
-        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@700&family=Inter:wght@400;600;700&display=swap');
-        :root { --bg-primary: #0a0a0f; --bg-secondary: #1e2746; --border-color: #27272a; }
-        .font-display { font-family: 'Teko', sans-serif; }
-        .font-sans { font-family: 'Inter', sans-serif; }
-        .text-gradient-animated { background: linear-gradient(90deg, #ff3b3b, #3b82f6, #87ceeb, #ff3b3b); background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradient-shine 4s linear infinite; }
-        @keyframes gradient-shine { to { background-position: 300% center; } }
-    `;
+    @import url('https://fonts.googleapis.com/css2?family=Teko:wght@700&family=Inter:wght@400;600;700&display=swap');
+    :root { --bg-primary: #0a0a0f; --bg-secondary: #1e2746; --border-color: #27272a; }
+    .font-display { font-family: 'Teko', sans-serif; }
+    .font-sans { font-family: 'Inter', sans-serif; }
+    .text-gradient-animated { background: linear-gradient(90deg, #ff3b3b, #3b82f6, #87ceeb, #ff3b3b); background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradient-shine 4s linear infinite; }
+    @keyframes gradient-shine { to { background-position: 300% center; } }
+  `;
 
   if (loading) {
     return (
@@ -205,18 +196,19 @@ const BattleRoyalePage = () => {
 
         <main className="container mx-auto px-6 pt-28 pb-16">
           <div className="text-center">
-            
+            <h1 className="text-5xl md:text-7xl font-display uppercase tracking-wider text-gradient-animated">
+              Battle Royale Arena
+            </h1>
             <div className="mt-12 flex justify-center items-center gap-4 sm:gap-6">
               {["Solo", "Duo", "Squad"].map((mode) => (
                 <button
                   key={mode}
                   onClick={() => setSelectedMode(mode)}
-                  className={`px-5 py-0.01 sm:px-6 sm:py-2 rounded-full font-display text-lg sm:text-xl uppercase tracking-wider transition-all duration-300 hover:scale-105 focus:outline-none
-                                        ${
-                                          selectedMode === mode
-                                            ? "bg-blue-600/20 text-white ring-2 ring-blue-500 shadow-lg"
-                                            : "bg-secondary text-gray-400"
-                                        }`}
+                  className={`px-5 py-1 sm:px-6 sm:py-2 rounded-full font-display text-lg sm:text-xl uppercase tracking-wider transition-all duration-300 hover:scale-105 focus:outline-none ${
+                    selectedMode === mode
+                      ? "bg-blue-600/20 text-white ring-2 ring-blue-500 shadow-lg"
+                      : "bg-secondary text-gray-400"
+                  }`}
                 >
                   {mode}
                 </button>
@@ -241,8 +233,7 @@ const BattleRoyalePage = () => {
             </div>
           </div>
         </main>
-
-        {/* --- (2) PURANE NAV CODE KO HATAKAR NAYA COMPONENT USE KIYA GAYA HAI --- */}
+        
         <BottomNav />
       </div>
     </>
@@ -250,3 +241,4 @@ const BattleRoyalePage = () => {
 };
 
 export default BattleRoyalePage;
+

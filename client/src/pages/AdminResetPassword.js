@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Eye, EyeOff, Lock, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import api from '../api'; // UPDATED: Now imports our smart api helper
+import { Eye, EyeOff, Lock, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 
 const AdminResetPassword = () => {
     const [password, setPassword] = useState('');
@@ -32,18 +32,11 @@ const AdminResetPassword = () => {
 
         setLoading(true);
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            };
-            
-            // --- THIS IS THE CORRECTED PART ---
-            // We now use the full backend URL to send the request.
-            const { data } = await axios.post(
-                `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/admin/reset-password/${token}`,
-                { password },
-                config
+            // --- THIS IS THE UPDATED PART ---
+            // The API call now uses our smart 'api' helper
+            const { data } = await api.post(
+                `/api/admin/reset-password/${token}`,
+                { password }
             );
             
             setMessage(data.message + " Redirecting to login...");
@@ -82,15 +75,15 @@ const AdminResetPassword = () => {
                         <h2 className="text-3xl font-display text-center text-white mb-6">Reset Your Password</h2>
                         
                         {message && (
-                            <div className="p-4 rounded-md text-center bg-green-500/10 text-green-400">
-                                <CheckCircle className="mx-auto mb-2" />
+                            <div className="p-4 rounded-md text-center bg-green-500/10 text-green-400 flex flex-col items-center gap-2">
+                                <CheckCircle2 />
                                 {message}
                             </div>
                         )}
                         
                         {error && !message && (
-                             <div className="p-4 rounded-md text-center bg-red-500/10 text-red-400">
-                                <AlertCircle className="mx-auto mb-2" />
+                             <div className="p-4 rounded-md text-center bg-red-500/10 text-red-400 flex flex-col items-center gap-2">
+                                <AlertCircle />
                                 {error}
                             </div>
                         )}

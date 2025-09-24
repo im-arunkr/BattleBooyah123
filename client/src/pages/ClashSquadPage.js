@@ -1,68 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api'; // UPDATED: Now imports our smart api helper
 import { Wallet, Loader2, ListChecks, Gamepad2, LogOut, User, Trophy, ThumbsUp, Check } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 
 
 const ClashSquadPage = () => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [notification, setNotification] = useState(null); // From your new code
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [notification, setNotification] = useState(null);
 
-    // --- State for the voting system ---
-    const [voteCount, setVoteCount] = useState(0);
-    const [hasVoted, setHasVoted] = useState(false);
-    const [isVoting, setIsVoting] = useState(false);
+    // --- State for the voting system ---
+    const [voteCount, setVoteCount] = useState(0);
+    const [hasVoted, setHasVoted] = useState(false);
+    const [isVoting, setIsVoting] = useState(false);
 
-    // --- UPDATED useEffect from your snippet ---
-    useEffect(() => {
-        const fetchData = async () => {
-            const token = localStorage.getItem("user_token");
-            if (!token) {
-                navigate("/login");
-                return;
-            }
-            const api = axios.create({
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            try {
-                const userResponse = await api.get(
-                    "http://localhost:5000/api/users/me"
-                );
-                setUser(userResponse.data);
-                // Dummy vote data for now
-                setVoteCount(152);
-            } catch (error) {
-                console.error("Failed to fetch user data", error);
-                localStorage.removeItem("user_token");
-                navigate("/login");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [navigate]);
+    // --- UPDATED useEffect to use the api helper ---
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // API calls now use the 'api' helper, which sets the base URL and token
+                const [userResponse, voteResponse] = await Promise.all([
+                    api.get("/api/users/me"),
+                    api.get("/api/votes/Clash%20Squad") // URL Encoded space
+                ]);
+                
+                setUser(userResponse.data);
+                setVoteCount(voteResponse.data.totalVotes);
+                setHasVoted(voteResponse.data.hasVoted);
 
-    const handleVote = () => {
-        if (hasVoted) return;
-        setIsVoting(true);
-        // Simulate API call
-        setTimeout(() => {
-            setHasVoted(true);
-            setVoteCount(prev => prev + 1);
-            setIsVoting(false);
-            // Example: api.post('/api/votes/Clash%20Squad');
-        }, 1000);
-    };
-    
-    // --- UPDATED handleLogout from your snippet ---
-    const handleLogout = () => {
-        localStorage.removeItem("user_token");
-        navigate("/login");
-    };
-    
+            } catch (error) {
+                console.error("Failed to fetch page data", error);
+                // If fetching fails, log out the user for security
+                localStorage.removeItem("user_token");
+                navigate("/login");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [navigate]);
+
+    const handleVote = () => {
+        if (hasVoted) return;
+        setIsVoting(true);
+        // This will be the real API call
+        api.post('/api/votes/Clash%20Squad')
+            .then(response => {
+                setHasVoted(true);
+                setVoteCount(response.data.totalVotes);
+            })
+            .catch(err => {
+                console.error("Vote failed", err);
+                alert(err.response?.data?.message || "Could not cast vote.");
+            })
+            .finally(() => {
+                setIsVoting(false);
+            });
+    };
+    
+    const handleLogout = () => {
+        localStorage.removeItem("user_token");
+        navigate("/login");
+    };
+
     const customStyles = `
         @import url('https://fonts.googleapis.com/css2?family=Teko:wght@700&family=Inter:wght@400;600;700&display=swap');
         .font-display { font-family: 'Teko', sans-serif; }

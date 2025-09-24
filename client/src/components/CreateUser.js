@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import axios from 'axios'; // Using axios directly as api.js might not be set up for admin
+import api from "../api";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 
-// This is the updated CreateUser component with the new UI
 function CreateUser() {
     const [userId, setUserId] = useState("");
     const [mobileNumber, setMobileNumber] = useState("");
@@ -26,24 +25,13 @@ function CreateUser() {
         }
 
         try {
-            const token = localStorage.getItem('token');
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
-                }
-            };
-
-            const { data } = await axios.post(
-                "http://localhost:5000/api/admin/users", // Correct endpoint from your adminRoutes
-                {
-                    userId,
-                    mobileNumber,
-                    password,
-                    points: Number(points) || 0,
-                },
-                config
-            );
+            // UPDATED: Now uses the smart 'api' helper
+            const { data } = await api.post("/api/admin/users", { // Correct endpoint
+                userId,
+                mobileNumber,
+                password,
+                points: Number(points) || 0,
+            });
 
             setMessage(data.message || "User created successfully!");
             // Reset form fields
@@ -60,8 +48,8 @@ function CreateUser() {
     };
 
     return (
-        <div className="bg-[#121218] p-6 md:p-8 rounded-lg border border-[#27272a] max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-6">Create New User</h2>
+        <div className="bg-[#121218] p-6 md:p-8 rounded-lg border border-[#27272a] max-w-2xl mx-auto animate-fade-in">
+            <h2 className="text-2xl font-bold text-white mb-6">Create New User Account</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -74,7 +62,7 @@ function CreateUser() {
                             type="text"
                             value={userId}
                             onChange={(e) => setUserId(e.target.value)}
-                            className="w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
+                            className="input-field w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
                             placeholder="Enter unique UserID"
                         />
                     </div>
@@ -87,7 +75,7 @@ function CreateUser() {
                             type="text"
                             value={mobileNumber}
                             onChange={(e) => setMobileNumber(e.target.value)}
-                            className="w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
+                            className="input-field w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
                             placeholder="Enter 10-digit mobile number"
                         />
                     </div>
@@ -103,7 +91,7 @@ function CreateUser() {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
+                            className="input-field w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
                             placeholder="Set a strong password"
                         />
                     </div>
@@ -116,7 +104,7 @@ function CreateUser() {
                             type="number"
                             value={points}
                             onChange={(e) => setPoints(e.target.value)}
-                            className="w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
+                            className="input-field w-full bg-[#0a0a0f] border border-[#27272a] rounded-lg py-2 px-3 text-white focus:outline-none focus:border-blue-500"
                             placeholder="e.g., 100"
                         />
                     </div>
@@ -137,7 +125,6 @@ function CreateUser() {
                 </div>
             </form>
             
-            {/* Success and Error Messages */}
             {message && 
                 <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 text-green-300 rounded-lg flex items-center gap-3">
                     <CheckCircle2 size={20} />
@@ -155,3 +142,4 @@ function CreateUser() {
 }
 
 export default CreateUser;
+

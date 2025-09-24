@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../api";
 import {
   Swords,
   Crown,
@@ -105,9 +106,12 @@ const UserDashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       try {
-        const userResponse = await api.get(
-          "http://localhost:5000/api/users/me"
-        );
+
+
+        const userResponse = await api.get("/api/users/me");
+
+
+
         setUser(userResponse.data);
         setLoading(false);
       } catch (error) {

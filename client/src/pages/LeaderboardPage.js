@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import api from "../api"; // UPDATED: Now imports our smart api helper
 import {
   Loader2,
   ArrowLeft,
   Crown,
   Trophy,
   Wallet,
-  Sword,
+  Swords,
   IndianRupee,
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -23,18 +23,12 @@ const LeaderboardPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("user_token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
       try {
-        const api = axios.create({
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // --- THIS IS THE UPDATED PART ---
+        // API calls now use the 'api' helper, which sets the base URL and token automatically.
         const [leaderboardResponse, userResponse] = await Promise.all([
-          api.get(`http://localhost:5000/api/contests/${id}/leaderboard`),
-          api.get("http://localhost:5000/api/users/me"),
+          api.get(`/api/contests/${id}/leaderboard`),
+          api.get("/api/users/me"),
         ]);
 
         setLeaderboardData(leaderboardResponse.data);
@@ -85,15 +79,15 @@ const LeaderboardPage = () => {
   }
 
   const customStyles = `
-        @import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Inter:wght@400;600;700&display=swap');
-        .font-display { font-family: 'Teko', sans-serif; }
-        .font-sans { font-family: 'Inter', sans-serif; }
-        .text-gradient-animated { background: linear-gradient(90deg, #ff3b3b, #3b82f6, #87ceeb, #ff3b3b); background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradient-shine 4s linear infinite; }
-        @keyframes gradient-shine { to { background-position: 300% center; } }
-        .shadow-gold { box-shadow: 0 0 25px rgba(251, 191, 36, 0.4); }
-        .shadow-silver { box-shadow: 0 0 20px rgba(209, 213, 219, 0.3); }
-        .shadow-bronze { box-shadow: 0 0 15px rgba(205, 127, 50, 0.4); }
-    `;
+      @import url('https://fonts.googleapis.com/css2?family=Teko:wght@500;700&family=Inter:wght@400;600;700&display=swap');
+      .font-display { font-family: 'Teko', sans-serif; }
+      .font-sans { font-family: 'Inter', sans-serif; }
+      .text-gradient-animated { background: linear-gradient(90deg, #ff3b3b, #3b82f6, #87ceeb, #ff3b3b); background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradient-shine 4s linear infinite; }
+      @keyframes gradient-shine { to { background-position: 300% center; } }
+      .shadow-gold { box-shadow: 0 0 25px rgba(251, 191, 36, 0.4); }
+      .shadow-silver { box-shadow: 0 0 20px rgba(209, 213, 219, 0.3); }
+      .shadow-bronze { box-shadow: 0 0 15px rgba(205, 127, 50, 0.4); }
+  `;
 
   const sortedResults = leaderboardData.results.sort((a, b) => a.rank - b.rank);
   const top3 = sortedResults.slice(0, 3);
@@ -121,7 +115,6 @@ const LeaderboardPage = () => {
         </header>
 
         <main className="container mx-auto px-3 pt-24 pb-10">
-          {/* Top 3 Podium - Directly on the page body */}
           <div className="flex justify-center items-end gap-2 sm:gap-3 mb-8">
             {top3.find((p) => p.rank === 2) && (
               <PodiumCard player={top3.find((p) => p.rank === 2)} rank={2} />
@@ -134,7 +127,6 @@ const LeaderboardPage = () => {
             )}
           </div>
 
-          {/* Rest of Leaderboard - Directly on the page body */}
           {others.length > 0 && (
             <div className="max-w-4xl mx-auto">
               <div className="grid grid-cols-12 gap-3 mb-3 px-2 text-sm text-gray-400 font-bold uppercase tracking-wider">
@@ -173,7 +165,7 @@ const LeaderboardPage = () => {
                         {player.gameUsername || "-"}
                       </div>
                       <div className="col-span-3 flex items-center justify-center gap-1.5 text-red-400 font-semibold text-sm">
-                        <Sword size={14} />
+                        <Swords size={14} />
                         <span>{player.kills}</span>
                       </div>
                       <div className="col-span-3 flex items-center justify-end gap-1 text-green-400 font-bold text-sm">
@@ -235,7 +227,6 @@ const PodiumCard = ({ player, rank }) => {
         size={rank === 1 ? 28 : 24}
       />
 
-      {/* Top part: Name only */}
       <div
         className={`w-full mt-1.5 rounded-t-lg flex justify-center items-center text-center p-2 h-16 ${style.bg}`}
       >
@@ -243,8 +234,6 @@ const PodiumCard = ({ player, rank }) => {
           {player.gameUsername}
         </span>
       </div>
-
-      {/* Bottom part: Rank, Kills, and Prize */}
       <div
         className={`${style.height} w-full rounded-b-lg border-2 ${style.borderColor} ${style.shadow} bg-[#1a1a24] flex flex-col items-center justify-evenly p-2`}
       >

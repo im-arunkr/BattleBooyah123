@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
-
+import api from "../api"; // UPDATED: Now imports our smart api helper
 import {
   Loader2,
   ArrowLeft,
-  Users,
-  Trophy,
   Wallet,
   ListChecks,
   Gamepad2,
   LogOut,
   User,
   ChevronDown,
+  Trophy,
   XCircle,
   CheckCircle2,
 } from "lucide-react";
 import BottomNav from "../components/BottomNav";
+
 // --- Join Form Modal (Compact Version) ---
 const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
   const teamSizeMap = { Solo: 1, Duo: 2, Squad: 4 };
@@ -72,14 +71,10 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
 
     setIsChecking(true);
     try {
-      const token = localStorage.getItem("user_token");
-      const api = axios.create({
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
       const userIdsToCheck = playerDetails.map((p) => p.userId);
+      // UPDATED: API call now uses the 'api' helper
       const response = await api.post(
-        `http://localhost:5000/api/contests/${contest._id}/check-participants`,
+        `/api/contests/${contest._id}/check-participants`,
         {
           userIds: userIdsToCheck,
         },
@@ -272,6 +267,7 @@ const JoinSuccessModal = ({ onClose }) => (
 );
 
 // --- Contest Detail Page ---
+// --- Contest Detail Page ---
 const ContestDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -286,18 +282,11 @@ const ContestDetailPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("user_token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-      const api = axios.create({
-        headers: { Authorization: `Bearer ${token}` },
-      });
       try {
+        // UPDATED: API calls now use the 'api' helper
         const [userResponse, contestResponse] = await Promise.all([
-          api.get("http://localhost:5000/api/users/me"),
-          api.get(`http://localhost:5000/api/contests/${id}`),
+          api.get("/api/users/me"),
+          api.get(`/api/contests/${id}`),
         ]);
         setUser(userResponse.data);
         setContest(contestResponse.data);
@@ -323,28 +312,24 @@ const ContestDetailPage = () => {
   const handleConfirmJoin = async ({ teamName, playerDetails }) => {
     setShowJoinModal(false);
     try {
-      const token = localStorage.getItem("user_token");
-      const api = axios.create({
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      // Corrected API call
-      await api.post(`http://localhost:5000/api/contests/${id}/join`, {
-        teamType: contest.teamType, // <-- ADD THIS LINE
-        teamName,
-        players: playerDetails.map((p) => ({
-          // <-- SEE CORRECTION #2 BELOW
-          inGameUsername: p.username,
-          inGameUserId: p.userId,
-        })),
-      });
-
-      setShowJoinSuccessModal(true);
+        // UPDATED: API call now uses the 'api' helper
+        await api.post(`/api/contests/${id}/join`, {
+            teamType: contest.teamType,
+            teamName,
+            players: playerDetails.map((p) => ({
+                inGameUsername: p.username,
+                inGameUserId: p.userId,
+            })),
+        });
+        setShowJoinSuccessModal(true);
     } catch (error) {
-      alert(
-        "Failed to join contest: " +
-          (error.response?.data?.message || "Server error"),
-      );
+        // We will show the error in the modal, but alert is a backup
+        alert(
+            "Failed to join contest: " +
+            (error.response?.data?.message || "Server error"),
+        );
+        // Re-throw the error so the modal can catch it
+        throw error; 
     }
   };
 
@@ -352,6 +337,7 @@ const ContestDetailPage = () => {
     localStorage.removeItem("user_token");
     navigate("/login");
   };
+
 
   const customStyles = `
         @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;700&family=Inter:wght@400;600;700&display=swap');
@@ -646,7 +632,8 @@ const ContestDetailPage = () => {
           </div>
         </main>
 
-        <BottomNav />
+         {/* Your bottom nav component would go here, or the full nav code */}
+                   <BottomNav />
       </div>
     </>
   );

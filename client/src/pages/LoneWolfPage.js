@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Wallet, Loader2, ListChecks, Gamepad2, LogOut, User, Trophy, ThumbsUp, Check } from 'lucide-react';
-import BottomNav from '../components/BottomNav';
+import api from '../api'; // UPDATED: Now imports our smart api helper
+import { 
+    Wallet, Loader2, ListChecks, Gamepad2, LogOut, User, Trophy, ThumbsUp, Check, Home 
+} from 'lucide-react';
+import BottomNav from "../components/BottomNav";
 
 const LoneWolfPage = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [notification, setNotification] = useState(null);
-
+    
     // --- Voting state ---
     const [voteCount, setVoteCount] = useState(0);
     const [hasVoted, setHasVoted] = useState(false);
@@ -17,45 +18,52 @@ const LoneWolfPage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const token = localStorage.getItem("user_token");
-            if (!token) {
-                navigate("/login");
-                return;
-            }
-            const api = axios.create({
-                headers: { Authorization: `Bearer ${token}` },
-            });
             try {
-                const userResponse = await api.get("http://localhost:5000/api/users/me");
+                // UPDATED: API calls now use the 'api' helper
+                const [userResponse, voteResponse] = await Promise.all([
+                    api.get("/api/users/me"),
+                    api.get("/api/votes/Lone%20Wolf") // The space must be URL-encoded
+                ]);
+                
                 setUser(userResponse.data);
-                // Dummy vote count
-                setVoteCount(87);
+                setVoteCount(voteResponse.data.totalVotes);
+                setHasVoted(voteResponse.data.hasVoted);
+                
             } catch (error) {
-                console.error("Failed to fetch user data", error);
-                localStorage.removeItem("user_token");
-                navigate("/login");
+                console.error("Failed to fetch page data", error);
+                // Fallback for dummy data if vote API fails for now
+                if (user === null) {
+                    localStorage.removeItem("user_token");
+                    navigate("/login");
+                }
             } finally {
                 setLoading(false);
             }
         };
         fetchData();
-    }, [navigate]);
+    }, [navigate, user]);
 
-    const handleVote = () => {
-        if (hasVoted) return;
+    const handleVote = async () => {
         setIsVoting(true);
-        setTimeout(() => {
+        try {
+            // UPDATED: API call now uses the 'api' helper
+            const { data } = await api.post('/api/votes/Lone%20Wolf');
+            
+            setVoteCount(data.totalVotes);
             setHasVoted(true);
-            setVoteCount(prev => prev + 1);
+        } catch (error) {
+            console.error("Failed to cast vote", error);
+            alert(error.response?.data?.message || "Could not cast vote.");
+        } finally {
             setIsVoting(false);
-        }, 1000);
+        }
     };
-
+    
     const handleLogout = () => {
         localStorage.removeItem("user_token");
         navigate("/login");
     };
-
+    
     const customStyles = `
         @import url('https://fonts.googleapis.com/css2?family=Teko:wght@700&family=Inter:wght@400;600;700&display=swap');
         .font-display { font-family: 'Teko', sans-serif; }
@@ -63,7 +71,7 @@ const LoneWolfPage = () => {
         .text-gradient-animated { background: linear-gradient(90deg, #ff3b3b, #3b82f6, #87ceeb, #ff3b3b); background-size: 300% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: gradient-shine 4s linear infinite; }
         @keyframes gradient-shine { to { background-position: 300% center; } }
     `;
-
+    
     if (loading) {
         return <div className="min-h-screen flex items-center justify-center bg-[#0a0a0f]"><Loader2 className="animate-spin text-blue-500" size={48} /></div>;
     }
@@ -84,12 +92,15 @@ const LoneWolfPage = () => {
                     </div>
                 </header>
 
-                <main className="flex flex-col items-center justify-center w-full h-[calc(100vh-64px)] px-6 text-center">
+                <main className="container mx-auto px-6 pt-28 pb-16 text-center flex flex-col items-center">
+                    <h1 className="text-5xl md:text-7xl font-display uppercase tracking-wider text-gradient-animated">
+                        Lone Wolf Arena
+                    </h1>
+                    <p className="mt-2 text-lg text-gray-400">Pure skill. Raw aim. Coming Soon!</p>
 
-                    
                     <div className="mt-12 p-8 bg-[#121218] border border-[#27272a] rounded-xl max-w-2xl w-full shadow-lg">
                         <h2 className="text-2xl font-bold text-white">Want to play Lone Wolf contests?</h2>
-                        <p className="text-gray-400 mt-2">Vote now to let us know you're interested! More votes = faster launch.</p>
+                        <p className="text-gray-400 mt-2">Vote now to let us know you're interested! The more votes we get, the sooner we'll launch it.</p>
                         
                         <div className="mt-6">
                             <button 
@@ -98,11 +109,11 @@ const LoneWolfPage = () => {
                                 className={`w-full max-w-xs mx-auto flex items-center justify-center gap-3 font-bold py-3 px-6 rounded-lg text-lg transition-all duration-300
                                     ${hasVoted 
                                         ? 'bg-green-600 text-white cursor-not-allowed' 
-                                        : 'bg-blue-600 text-white hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/30 disabled:opacity-50'}` 
+                                        : 'bg-blue-600 text-white hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-500/30 disabled:opacity-50'}`
                                 }
                             >
-                                {isVoting ? <Loader2 className="animate-spin" /> :
-                                 hasVoted ? <><Check size={24}/> Voted!</> :
+                                {isVoting ? <Loader2 className="animate-spin" /> : 
+                                 hasVoted ? <><Check size={24}/> Voted!</> : 
                                  <><ThumbsUp size={24}/> Vote for Lone Wolf</>
                                 }
                             </button>
@@ -110,9 +121,9 @@ const LoneWolfPage = () => {
                         <p className="mt-4 text-gray-500 text-sm">Total Votes: <span className="font-bold text-white">{voteCount}</span></p>
                     </div>
                 </main>
-  {/* Bottom Navigation */}
-                <BottomNav />
                 
+               {/* Your bottom nav component would go here, or the full nav code */}
+                   <BottomNav />
             </div>
         </>
     );
