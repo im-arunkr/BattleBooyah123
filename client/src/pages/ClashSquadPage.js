@@ -1,70 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../api'; // UPDATED: Now imports our smart api helper
-import { Wallet, Loader2, ListChecks, Gamepad2, LogOut, User, Trophy, ThumbsUp, Check } from 'lucide-react';
+import api from '../api'; // UPDATED: Imports the smart api helper
+import { Wallet, Loader2, ListChecks, Gamepad2, LogOut, User, Trophy, ThumbsUp, Check, Home } from 'lucide-react';
 import BottomNav from '../components/BottomNav';
 
-
 const ClashSquadPage = () => {
-    const navigate = useNavigate();
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [notification, setNotification] = useState(null);
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    
+    // --- State for the voting system ---
+    const [voteCount, setVoteCount] = useState(0);
+    const [hasVoted, setHasVoted] = useState(false);
+    const [isVoting, setIsVoting] = useState(false);
 
-    // --- State for the voting system ---
-    const [voteCount, setVoteCount] = useState(0);
-    const [hasVoted, setHasVoted] = useState(false);
-    const [isVoting, setIsVoting] = useState(false);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // --- THIS IS THE UPDATED PART ---
+                // API calls now use the smart 'api' helper, which automatically adds the token
+                const [userResponse, voteResponse] = await Promise.all([
+                    api.get('/api/users/me'),
+                    api.get('/api/votes/Clash%20Squad') // Space must be URL-encoded
+                ]);
+                
+                setUser(userResponse.data);
+                setVoteCount(voteResponse.data.totalVotes);
+                setHasVoted(voteResponse.data.hasVoted);
 
-    // --- UPDATED useEffect to use the api helper ---
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // API calls now use the 'api' helper, which sets the base URL and token
-                const [userResponse, voteResponse] = await Promise.all([
-                    api.get("/api/users/me"),
-                    api.get("/api/votes/Clash%20Squad") // URL Encoded space
-                ]);
-                
-                setUser(userResponse.data);
-                setVoteCount(voteResponse.data.totalVotes);
-                setHasVoted(voteResponse.data.hasVoted);
+            } catch (error) {
+                console.error("Failed to fetch page data", error);
+                localStorage.removeItem('user_token');
+                navigate('/login');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [navigate]);
 
-            } catch (error) {
-                console.error("Failed to fetch page data", error);
-                // If fetching fails, log out the user for security
-                localStorage.removeItem("user_token");
-                navigate("/login");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [navigate]);
-
-    const handleVote = () => {
-        if (hasVoted) return;
-        setIsVoting(true);
-        // This will be the real API call
-        api.post('/api/votes/Clash%20Squad')
-            .then(response => {
-                setHasVoted(true);
-                setVoteCount(response.data.totalVotes);
-            })
-            .catch(err => {
-                console.error("Vote failed", err);
-                alert(err.response?.data?.message || "Could not cast vote.");
-            })
-            .finally(() => {
-                setIsVoting(false);
-            });
-    };
-    
-    const handleLogout = () => {
-        localStorage.removeItem("user_token");
-        navigate("/login");
-    };
-
+    const handleVote = async () => {
+        setIsVoting(true);
+        try {
+            const { data } = await api.post('/api/votes/Clash%20Squad');
+            setVoteCount(data.totalVotes);
+            setHasVoted(true);
+        } catch (error) {
+            console.error("Failed to cast vote", error);
+            alert(error.response?.data?.message || "Could not cast vote.");
+        } finally {
+            setIsVoting(false);
+        }
+    };
+    
     const customStyles = `
         @import url('https://fonts.googleapis.com/css2?family=Teko:wght@700&family=Inter:wght@400;600;700&display=swap');
         .font-display { font-family: 'Teko', sans-serif; }
@@ -93,9 +81,11 @@ const ClashSquadPage = () => {
                     </div>
                 </header>
 
-                <main className="flex flex-col items-center justify-center w-full h-[calc(100vh-64px)] px-6 text-center">
-
-                 
+                <main className="container mx-auto px-6 pt-28 pb-16 text-center flex flex-col items-center">
+                    <h1 className="text-5xl md:text-7xl font-display uppercase tracking-wider text-gradient-animated">
+                        Clash Squad Arena
+                    </h1>
+                    <p className="mt-2 text-lg text-gray-400">Intense 4v4 combat. Coming Soon!</p>
 
                     <div className="mt-12 p-8 bg-[#121218] border border-[#27272a] rounded-xl max-w-2xl w-full shadow-lg">
                         <h2 className="text-2xl font-bold text-white">Want to play Clash Squad contests?</h2>
@@ -121,7 +111,6 @@ const ClashSquadPage = () => {
                     </div>
                 </main>
                 
-                {/* Bottom Navigation */}
                 <BottomNav />
             </div>
         </>

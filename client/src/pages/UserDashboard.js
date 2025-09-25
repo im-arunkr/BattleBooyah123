@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import api from "../api";
+import api from "../api"; // UPDATED: We only need this one
 import {
   Swords,
   Crown,
