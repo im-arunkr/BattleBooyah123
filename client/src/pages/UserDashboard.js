@@ -1,16 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api"; // UPDATED: We only need this one
-import {
-  Swords,
-  Crown,
-  Skull,
-  Instagram,
-  Twitter,
-  Youtube,
-  Wallet,
-  Loader2,
-} from "lucide-react";
+import { Instagram, Youtube, Github } from 'lucide-react';
+
 import BottomNav from "../components/BottomNav";
 
 // --- Custom Hook for Mobile Detection ---

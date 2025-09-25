@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom';
 // We don't need Link from react-router-dom anymore for this component
 // import { Link } from "react-router-dom";
 import {
-  Menu,
-  X,
   Swords,
   Crown,
   Skull,
   Instagram,
-  Twitter,
+  Github,
   Youtube,
+  Wallet,
+  Loader2,
 } from "lucide-react";
+
 
 // A custom hook to detect if the screen is mobile-sized
 const useIsMobile = (breakpoint = 768) => {
