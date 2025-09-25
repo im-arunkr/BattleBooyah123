@@ -152,9 +152,26 @@ const LandingPage = () => {
     .btn-primary:hover { background-position: right center; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
     .btn-secondary { background-color: transparent; color: #f5f5f5; border: 2px solid var(--border-color); }
     .btn-secondary:hover { color: var(--color-blue); border-color: var(--color-blue); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
-    .angled-section { position: relative; padding: 5rem 0; }
-    .angled-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-secondary); transform: skewY(-2deg); z-index: -1; }
-    .no-scrollbar::-webkit-scrollbar { display: none; } .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* --- FIX: Reduced padding to bring sections closer --- */
+    .angled-section { 
+      position: relative; 
+      padding: 4rem 0; 
+    }
+    /* --- FIX: Made pseudo-element taller and shifted to fix gaps --- */
+    .angled-section::before { 
+      content: ''; 
+      position: absolute; 
+      top: -50px; 
+      left: 0; 
+      width: 100%; 
+      height: calc(100% + 100px); 
+      background-color: var(--bg-secondary); 
+      transform: skewY(-2deg); 
+      z-index: -1; 
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; } 
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   `;
 
   return (
@@ -171,9 +188,9 @@ const LandingPage = () => {
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center gap-6 font-semibold">
-              <Link to="#gamemodes" className="text-gray-400 hover:text-white transition">Game Modes</Link>
-              <Link to="#create" className="text-gray-400 hover:text-white transition">Create</Link>
-              <Link to="#tournaments" className="text-gray-400 hover:text-white transition">Tournaments</Link>
+              <a href="#gamemodes" className="text-gray-400 hover:text-white transition">Game Modes</a>
+              <a href="#create" className="text-gray-400 hover:text-white transition">Create</a>
+              <a href="#tournaments" className="text-gray-400 hover:text-white transition">Tournaments</a>
               <Link to="/admin/login" className="text-gray-400 hover:text-white transition">Admin Login</Link>
             </div>
 
@@ -197,16 +214,16 @@ const LandingPage = () => {
           <div className={`fixed inset-y-0 right-0 w-3/4 max-w-sm bg-secondary/95 backdrop-blur-lg border-l border-border-color z-50 transform transition-transform duration-300 ease-in-out md:hidden ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
             <div className="flex flex-col items-start gap-6 py-10 px-8">
               <button onClick={() => setIsMenuOpen(false)} className="self-end text-white"><X size={32} /></button>
-              <Link to="#gamemodes" onClick={() => setIsMenuOpen(false)} className="text-xl w-full text-center py-2 hover:bg-gray-800 rounded transition">Game Modes</Link>
-              <Link to="#create" onClick={() => setIsMenuOpen(false)} className="text-xl w-full text-center py-2 hover:bg-gray-800 rounded transition">Create</Link>
-              <Link to="#tournaments" onClick={() => setIsMenuOpen(false)} className="text-xl w-full text-center py-2 hover:bg-gray-800 rounded transition">Tournaments</Link>
+              <a href="#gamemodes" onClick={() => setIsMenuOpen(false)} className="text-xl w-full text-center py-2 hover:bg-gray-800 rounded transition">Game Modes</a>
+              <a href="#create" onClick={() => setIsMenuOpen(false)} className="text-xl w-full text-center py-2 hover:bg-gray-800 rounded transition">Create</a>
+              <a href="#tournaments" onClick={() => setIsMenuOpen(false)} className="text-xl w-full text-center py-2 hover:bg-gray-800 rounded transition">Tournaments</a>
               <Link to="/admin/login" onClick={() => setIsMenuOpen(false)} className="text-xl w-full text-center py-2 hover:bg-gray-800 rounded transition">Admin Login</Link>
             </div>
           </div>
         </header>
 
         {/* MAIN */}
-        <main className="pt-28">
+        <main className="pt-18">
           {/* Hero */}
           <section className="relative flex items-center justify-center text-center overflow-hidden px-6 pt-40 pb-14 md:pt-28 md:pb-10">
             <div className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/50 to-transparent"></div>
@@ -233,13 +250,13 @@ const LandingPage = () => {
 
           {/* Game Modes */}
           <div className="angled-section">
-            <section id="gamemodes" className="container mx-auto px-6 relative z-10">
+            <section id="gamemodes" className="container mx-auto px-2 relative z-10">
               {isMobile ? (
                 <AutoCarousel sectionName="gamemodes" items={gameModes} renderItem={(item) => <ModeCard {...item} />} />
               ) : (
                 <div className="grid md:grid-cols-3 gap-8">
                   {gameModes.map((mode, i) => (
-                    <div key={mode.title} className="card-sharp text-center scroll-animate" style={{ transitionDelay: `${i * 100}ms` }}>
+                    <div key={mode.title} className="scroll-animate" style={{ transitionDelay: `${i * 100}ms` }}>
                       <ModeCard {...mode} />
                     </div>
                   ))}
@@ -297,8 +314,8 @@ const LandingPage = () => {
             </section>
           </div>
 
-          {/* How it works */}
-          <section id="howitworks" className="py-20">
+          {/* How it works --- FIX: Reduced padding from py-20 to py-16 --- */}
+          <section id="howitworks" className="py-16">
             <div className="container mx-auto px-6">
               <div className="text-center mb-12">
                 <h2 className="text-3xl sm:text-5xl font-display text-gradient-animated scroll-animate">Your Path to Victory</h2>
@@ -345,8 +362,8 @@ const LandingPage = () => {
                     <li><a href="#tournaments" className="hover:text-white transition">Tournaments</a></li>
                   </ul>
                   <ul className="space-y-3 text-left">
-                    <li><a href="/terms" className="hover:text-white transition">Terms of Service</a></li>
-                    <li><a href="/privacy" className="hover:text-white transition">Privacy Policy</a></li>
+                    <li><Link to="/terms" className="hover:text-white transition">Terms of Service</Link></li>
+                    <li><Link to="/privacy" className="hover:text-white transition">Privacy Policy</Link></li>
                   </ul>
                 </div>
                 <div className="flex justify-center gap-6">
@@ -381,8 +398,8 @@ const LandingPage = () => {
                   <div>
                     <h4 className="font-bold text-white tracking-wider">Legal</h4>
                     <ul className="mt-4 space-y-2">
-                      <li><a href="/terms" className="text-gray-500 hover:text-white transition">Terms of Service</a></li>
-                      <li><a href="/privacy" className="text-gray-500 hover:text-white transition">Privacy Policy</a></li>
+                      <li><Link to="/terms" className="text-gray-500 hover:text-white transition">Terms of Service</Link></li>
+                      <li><Link to="/privacy" className="text-gray-500 hover:text-white transition">Privacy Policy</Link></li>
                     </ul>
                   </div>
                 </div>

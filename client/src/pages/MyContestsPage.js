@@ -288,8 +288,8 @@ const MyContestsPage = () => {
                         >
                             Battle<span className="text-gradient-animated">Booyah</span>
                         </Link>
-                        <div className="flex items-center gap-2 bg-[#121218] border border-[#27272a] px-3 py-1.5 rounded-lg">
-                            <Wallet className="text-blue-400" size={20} />
+                        <div className="flex items-center gap-2 bg-[#121218] border border-[#27272a] px-2 py-1 rounded-lg">
+                            <Wallet className="text-blue-400" size={18} />
                             <span className="font-bold text-white text-sm">
                                 ₹{user?.points?.toFixed(2) || "0.00"}
                             </span>
