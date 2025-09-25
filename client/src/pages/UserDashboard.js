@@ -14,6 +14,11 @@ import {
 
 import BottomNav from "../components/BottomNav";
 
+// --- IMPORT YOUR LOCAL IMAGES HERE ---
+import battleRoyaleImage from '../images/battle-royal.jpg';
+import clashSquadImage from '../images/clash-squad.jpg';
+import loneWolfImage from '../images/lone-wolf.jpg';
+
 // --- Custom Hook for Mobile Detection ---
 const useIsMobile = (breakpoint = 768) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < breakpoint);
@@ -111,27 +116,26 @@ const UserDashboard = () => {
     fetchData();
   }, [navigate]);
 
+  // --- UPDATED gameModes ARRAY WITH YOUR IMAGES ---
   const gameModes = [
     {
-      icon: <Skull size={52} className="text-red-400" />,
+     
+       icon: <Crown size={52} className="text-yellow-400" />,
       title: "Battle Royale",
       desc: "High stakes, high rewards. Be the last one standing.",
-      imageUrl:
-        "https://images.pexels.com/photos/7862599/pexels-photo-7862599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      imageUrl: battleRoyaleImage,
     },
     {
       icon: <Swords size={52} className="text-blue-400" />,
       title: "Clash Squad",
       desc: "Teamwork and strategy are key to dominating the opposition.",
-      imageUrl:
-        "https://images.pexels.com/photos/15091942/pexels-photo-15091942/free-photo-of-man-in-a-gas-mask-and-a-black-hoodie.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      imageUrl: clashSquadImage,
     },
     {
-      icon: <Crown size={52} className="text-yellow-400" />,
+    icon: <Skull size={52} className="text-red-400" />,
       title: "Lone Wolf",
       desc: "A pure test of skill. Raw aim decides the winner.",
-      imageUrl:
-        "https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      imageUrl: loneWolfImage,
       route: "/games/lone-wolf",
     },
   ];
@@ -187,8 +191,7 @@ const UserDashboard = () => {
   return (
     <>
       <style>{customStyles}</style>
-      {/* FIX: Added padding-bottom (pb-32) to this main wrapper div */}
-      <div className="bg-primary text-gray-300 font-sans pb-16"> {/* Changed from pb-32 */}
+      <div className="bg-primary text-gray-300 font-sans pb-16">
         {notification && <div className="toast-center">{notification}</div>}
 
         {/* Header */}
@@ -212,7 +215,6 @@ const UserDashboard = () => {
           </div>
         </header>
         
-        {/* FIX: Reverted padding-bottom on main to its original value */}
         <main className="pt-20 pb-12">
           {/* Welcome Section */}
           <section className="container mx-auto px-6 text-center">
@@ -230,14 +232,16 @@ const UserDashboard = () => {
           {/* Game Mode Selection */}
           <section className="container mx-auto px-6 mt-16">
             <div className="grid md:grid-cols-3 gap-8">
-              {gameModes.map((mode) => (
+             {gameModes.map((mode) => (
                 <Link
                   key={mode.title}
                   to={`/games/${mode.title.toLowerCase().replace(/\s+/g, "-")}`}
                   style={{ backgroundImage: `url(${mode.imageUrl})` }}
+                  // --- Yahan bg-cover wapas use karein ---
                   className="group card-sharp block bg-cover bg-center h-80 p-0"
                 >
-                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/70 transition-colors duration-300 rounded-md"></div>
+                  {/* Isse image zyada visible rahegi */}
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 rounded-md"></div>
                   <div className="relative z-10 flex flex-col text-center items-center justify-center h-full p-8">
                     <div className="mb-4">{mode.icon}</div>
                     <h3 className="font-display text-4xl uppercase tracking-wider text-white mb-3">
@@ -311,63 +315,59 @@ const UserDashboard = () => {
         </main>
 
         {/* FOOTER */}
-                <footer className="bg-black border-t border-border-color pt-12 pb-8">
-                  <div className="container mx-auto px-6">
-                    {isMobile ? (
-                      <div className="text-center text-gray-500">
-                        <h3 className="text-3xl font-display font-bold text-gradient-animated">Battle<span className="text-gradient-animated">Booyah</span></h3>
-                        <p className="mt-2 max-w-sm mx-auto text-sm">India's premier esports destination. Compete, win, and rise to the top.</p>
-                        <div className="flex justify-center gap-8 my-8 text-sm font-semibold">
-                          <ul className="space-y-3 text-left">
-                            <li><a href="#gamemodes" className="hover:text-white transition">Game Modes</a></li>
-                            <li><a href="#create" className="hover:text-white transition">Create Contest</a></li>
-                            
-                          </ul>
-                          <ul className="space-y-3 text-left">
-                            <li><Link to="/terms" className="hover:text-white transition">Terms of Service</Link></li>
-                            <li><Link to="/privacy" className="hover:text-white transition">Privacy Policy</Link></li>
-                          </ul>
-                        </div>
-                        <div className="flex justify-center gap-6">
-                          <a href="https://www.instagram.com/im_arunkr/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-blue-400 transition"><Instagram /></a>
-                          <a href="https://github.com/im-arunkr" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:text-blue-400 transition"><Github /></a>
-                          <a href="https://www.youtube.com/@arungaming4323" target="_blank" rel="noopener noreferrer" aria-label="Youtube" className="hover:text-blue-400 transition"><Youtube /></a>
-                        </div>
-                       
-                      </div>
-                    ) : (
-                      <div>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                          <div className="col-span-1 md:col-span-2">
-                            <h3 className="text-3xl font-display font-bold text-gradient-animated">Battle<span className="text-gradient-animated">Booyah</span></h3>
-                            <p className="mt-2 text-gray-500 max-w-sm">India's premier esports destination. Compete, win, and rise to the top of the leaderboards.</p>
-                            <div className="flex gap-4 mt-4">
-                              <a href="https://www.instagram.com/im_arunkr/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-blue-400 transition"><Instagram /></a>
-                              <a href="https://github.com/im-arunkr" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-gray-500 hover:text-blue-400 transition"><Github /></a>
-                              <a href="https://www.youtube.com/@arungaming4323" target="_blank" rel="noopener noreferrer" aria-label="Youtube" className="text-gray-500 hover:text-blue-400 transition"><Youtube /></a>
-                            </div>
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-white tracking-wider">Quick Links</h4>
-                            <ul className="mt-4 space-y-2">
-                              <li><a href="#gamemodes" className="text-gray-500 hover:text-white transition">Game Modes</a></li>
-                              <li><a href="#create" className="text-gray-500 hover:text-white transition">Create Contest</a></li>
-                              
-                            </ul>
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-white tracking-wider">Legal</h4>
-                            <ul className="mt-4 space-y-2">
-                              <li><Link to="/terms" className="text-gray-500 hover:text-white transition">Terms of Service</Link></li>
-                              <li><Link to="/privacy" className="text-gray-500 hover:text-white transition">Privacy Policy</Link></li>
-                            </ul>
-                          </div>
-                        </div>
-                        
-                      </div>
-                    )}
+        <footer className="bg-black border-t border-border-color pt-12 pb-8">
+          <div className="container mx-auto px-6">
+            {isMobile ? (
+              <div className="text-center text-gray-500">
+                <h3 className="text-3xl font-display font-bold text-gradient-animated">Battle<span className="text-gradient-animated">Booyah</span></h3>
+                <p className="mt-2 max-w-sm mx-auto text-sm">India's premier esports destination. Compete, win, and rise to the top.</p>
+                <div className="flex justify-center gap-8 my-8 text-sm font-semibold">
+                  <ul className="space-y-3 text-left">
+                    <li><a href="#gamemodes" className="hover:text-white transition">Game Modes</a></li>
+                    <li><a href="#create" className="hover:text-white transition">Create Contest</a></li>
+                  </ul>
+                  <ul className="space-y-3 text-left">
+                    <li><Link to="/terms" className="hover:text-white transition">Terms of Service</Link></li>
+                    <li><Link to="/privacy" className="hover:text-white transition">Privacy Policy</Link></li>
+                  </ul>
+                </div>
+                <div className="flex justify-center gap-6">
+                  <a href="https://www.instagram.com/im_arunkr/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-blue-400 transition"><Instagram /></a>
+                  <a href="https://github.com/im-arunkr" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:text-blue-400 transition"><Github /></a>
+                  <a href="https://www.youtube.com/@arungaming4323" target="_blank" rel="noopener noreferrer" aria-label="Youtube" className="hover:text-blue-400 transition"><Youtube /></a>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                  <div className="col-span-1 md:col-span-2">
+                    <h3 className="text-3xl font-display font-bold text-gradient-animated">Battle<span className="text-gradient-animated">Booyah</span></h3>
+                    <p className="mt-2 text-gray-500 max-w-sm">India's premier esports destination. Compete, win, and rise to the top of the leaderboards.</p>
+                    <div className="flex gap-4 mt-4">
+                      <a href="https://www.instagram.com/im_arunkr/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-blue-400 transition"><Instagram /></a>
+                      <a href="https://github.com/im-arunkr" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-gray-500 hover:text-blue-400 transition"><Github /></a>
+                      <a href="https://www.youtube.com/@arungaming4323" target="_blank" rel="noopener noreferrer" aria-label="Youtube" className="text-gray-500 hover:text-blue-400 transition"><Youtube /></a>
+                    </div>
                   </div>
-                </footer>
+                  <div>
+                    <h4 className="font-bold text-white tracking-wider">Quick Links</h4>
+                    <ul className="mt-4 space-y-2">
+                      <li><a href="#gamemodes" className="text-gray-500 hover:text-white transition">Game Modes</a></li>
+                      <li><a href="#create" className="text-gray-500 hover:text-white transition">Create Contest</a></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white tracking-wider">Legal</h4>
+                    <ul className="mt-4 space-y-2">
+                      <li><Link to="/terms" className="text-gray-500 hover:text-white transition">Terms of Service</Link></li>
+                      <li><Link to="/privacy" className="text-gray-500 hover:text-white transition">Privacy Policy</Link></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </footer>
 
         <BottomNav />
       </div>
