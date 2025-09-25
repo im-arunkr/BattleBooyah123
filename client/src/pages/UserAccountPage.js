@@ -194,17 +194,26 @@ const UserAccountPage = () => {
     <>
       <style>{customStyles}</style>
       <div className="min-h-screen bg-[#0a0a0f] font-sans text-white">
-        <header className="bg-[#121218] border-b border-[#27272a] sticky top-0 z-50">
-          <div className="container mx-auto px-6 py-3 flex justify-between items-center">
-            <Link to="/dashboard" className="text-3xl font-display font-bold tracking-wider">
-              Battle<span className="text-gradient-animated">Booyah</span>
-            </Link>
-            <div className="flex items-center gap-2 bg-[#0a0a0f] border border-[#27272a] px-2 py-1 rounded-lg">
-                <Wallet className="text-blue-400" size={18}/>
-                <span className="font-bold text-lg">₹{user?.points?.toFixed(2) || '0.00'}</span>
-            </div>
-          </div>
-        </header>
+         {/* Header */}
+               <header className="fixed top-0 left-0 w-full z-50 bg-primary/80 backdrop-blur-md border-b border-border-color">
+                 <div className="container mx-auto px-6 py-3 flex justify-between items-center">
+                   <Link
+                     to="/"
+                     className="text-3xl font-display font-bold tracking-wider text-white"
+                   >
+                     Battle
+                     <span className="text-gradient-animated">Booyah</span>
+                   </Link>
+                   <div className="flex items-center gap-4 md:gap-6">
+                     <div className="flex items-center gap-2 bg-secondary border border-border-color px-2 py-1 rounded-lg">
+                       <Wallet className="text-blue-400" size={18} />
+                       <span className="font-bold text-white text-sm">
+                         ₹{user?.points?.toFixed(2) || "0.00"}
+                       </span>
+                     </div>
+                   </div>
+                 </div>
+               </header>
 
         <main className="container mx-auto px-6 py-8">
             <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 mb-6">
