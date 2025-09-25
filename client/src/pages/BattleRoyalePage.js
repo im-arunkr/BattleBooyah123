@@ -196,9 +196,7 @@ const BattleRoyalePage = () => {
 
         <main className="container mx-auto px-6 pt-28 pb-16">
           <div className="text-center">
-            <h1 className="text-5xl md:text-7xl font-display uppercase tracking-wider text-gradient-animated">
-              Battle Royale Arena
-            </h1>
+            
             <div className="mt-12 flex justify-center items-center gap-4 sm:gap-6">
               {["Solo", "Duo", "Squad"].map((mode) => (
                 <button

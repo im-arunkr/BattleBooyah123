@@ -4,6 +4,7 @@ import api from "../api"; // UPDATED: Now imports our smart api helper
 import {
   User, Lock, Wallet, LogOut, Loader2, ArrowLeft, CreditCard, CheckCircle2, AlertCircle
 } from "lucide-react";
+import BottomNav from '../components/BottomNav';
 
 const UserAccountPage = () => {
   const navigate = useNavigate();
@@ -232,7 +233,9 @@ const UserAccountPage = () => {
                     </div>
                 </div>
             </div>
+
         </main>
+          <BottomNav />
       </div>
     </>
   );

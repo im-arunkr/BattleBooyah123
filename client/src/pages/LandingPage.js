@@ -613,204 +613,181 @@ const LandingPage = () => {
         </main>
 
         {/* Footer */}
-        <footer className="bg-black border-t border-border-color pt-12 pb-8">
-          <div className="container mx-auto px-6">
-            {isMobile ? (
-              // --- MOBILE FOOTER ---
-              <div className="text-center text-gray-500">
-                <h3 className="text-3xl font-display font-bold text-gradient-animated">
-                  Battle<span className="text-gradient-animated">Booyah</span>
-                </h3>
-                <p className="mt-2 max-w-sm mx-auto text-sm">
-                  Jasidih's premier esports destination. Compete, win, and rise
-                  to the top.
-                </p>
+<footer className="bg-black border-t border-border-color pt-12 pb-8">
+  <div className="container mx-auto px-6">
+    {isMobile ? (
+      // --- MOBILE FOOTER ---
+      <div className="text-center text-gray-500">
+        <h3 className="text-3xl font-display font-bold text-gradient-animated">
+          Battle<span className="text-gradient-animated">Booyah</span>
+        </h3>
+        <p className="mt-2 max-w-sm mx-auto text-sm">
+          India's premier esports destination. Compete, win, and rise
+          to the top.
+        </p>
 
-                <div className="flex justify-center gap-8 my-8 text-sm font-semibold">
-                  <ul className="space-y-3 text-left">
-                    <li>
-                      <a
-                        href="#gamemodes"
-                        className="hover:text-white transition"
-                      >
-                        Game Modes
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#create" className="hover:text-white transition">
-                        Create Contest
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#tournaments"
-                        className="hover:text-white transition"
-                      >
-                        Tournaments
-                      </a>
-                    </li>
-                  </ul>
-                  <ul className="space-y-3 text-left">
-                    <li>
-                      <a href="/terms" className="hover:text-white transition">
-                        Terms of Service
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="/privacy"
-                        className="hover:text-white transition"
-                      >
-                        Privacy Policy
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+        <div className="flex justify-center gap-8 my-8 text-sm font-semibold">
+          <ul className="space-y-3 text-left">
+            <li>
+              <a href="#gamemodes" className="hover:text-white transition">
+                Game Modes
+              </a>
+            </li>
+            <li>
+              <a href="#create" className="hover:text-white transition">
+                Create Contest
+              </a>
+            </li>
+            <li>
+              <a href="#tournaments" className="hover:text-white transition">
+                Tournaments
+              </a>
+            </li>
+          </ul>
+          <ul className="space-y-3 text-left">
+            <li>
+              <a href="/terms" className="hover:text-white transition">
+                Terms of Service
+              </a>
+            </li>
+            <li>
+              <a href="/privacy" className="hover:text-white transition">
+                Privacy Policy
+              </a>
+            </li>
+          </ul>
+        </div>
 
-                <div className="flex justify-center gap-6">
-                  <a
-                    href="https://instagram.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    className="hover:text-blue-400 transition"
-                  >
-                    <Instagram />
-                  </a>
-                  <a
-                    href="https://twitter.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Twitter"
-                    className="hover:text-blue-400 transition"
-                  >
-                    <Twitter />
-                  </a>
-                  <a
-                    href="https://youtube.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Youtube"
-                    className="hover:text-blue-400 transition"
-                  >
-                    <Youtube />
-                  </a>
-                </div>
-                <div className="mt-8 pt-6 border-t border-border-color text-xs text-gray-600">
-                  <p>
-                    &copy; {new Date().getFullYear()} BattleBooyah. All Rights
-                    Reserved. Made with ❤️ in Jasidih.
-                  </p>
-                </div>
-              </div>
-            ) : (
-              // --- DESKTOP FOOTER ---
-              <div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                  <div className="col-span-1 md:col-span-2">
-                    <h3 className="text-3xl font-display font-bold text-gradient-animated">
-                      Battle
-                      <span className="text-gradient-animated">Booyah</span>
-                    </h3>
-                    <p className="mt-2 text-gray-500 max-w-sm">
-                      Jasidih's premier esports destination. Compete, win, and
-                      rise to the top of the leaderboards.
-                    </p>
-                    <div className="flex gap-4 mt-4">
-                      <a
-                        href="https://instagram.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Instagram"
-                        className="text-gray-500 hover:text-blue-400 transition"
-                      >
-                        <Instagram />
-                      </a>
-                      <a
-                        href="https://twitter.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Twitter"
-                        className="text-gray-500 hover:text-blue-400 transition"
-                      >
-                        <Twitter />
-                      </a>
-                      <a
-                        href="https://youtube.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="Youtube"
-                        className="text-gray-500 hover:text-blue-400 transition"
-                      >
-                        <Youtube />
-                      </a>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white tracking-wider">
-                      Quick Links
-                    </h4>
-                    <ul className="mt-4 space-y-2">
-                      <li>
-                        <a
-                          href="#gamemodes"
-                          className="text-gray-500 hover:text-white transition"
-                        >
-                          Game Modes
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#create"
-                          className="text-gray-500 hover:text-white transition"
-                        >
-                          Create Contest
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="#tournaments"
-                          className="text-gray-500 hover:text-white transition"
-                        >
-                          Tournaments
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white tracking-wider">
-                      Legal
-                    </h4>
-                    <ul className="mt-4 space-y-2">
-                      <li>
-                        <a
-                          href="/terms"
-                          className="text-gray-500 hover:text-white transition"
-                        >
-                          Terms of Service
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="/privacy"
-                          className="text-gray-500 hover:text-white transition"
-                        >
-                          Privacy Policy
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="mt-12 py-6 border-t border-border-color text-center text-gray-600">
-                  <p>
-                    &copy; {new Date().getFullYear()} BattleBooyah. All Rights
-                    Reserved. Made with ❤️ in Jasidih.
-                  </p>
-                </div>
-              </div>
-            )}
+        <div className="flex justify-center gap-6">
+          <a
+            href="https://www.instagram.com/im_arunkr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            className="hover:text-blue-400 transition"
+          >
+            <Instagram />
+          </a>
+          <a
+            href="https://github.com/im-arunkr"  // <- GitHub link added
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            className="hover:text-blue-400 transition"
+          >
+            <Github />
+          </a>
+          <a
+            href="https://www.youtube.com/@arungaming4323"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Youtube"
+            className="hover:text-blue-400 transition"
+          >
+            <Youtube />
+          </a>
+        </div>
+        <div className="mt-8 pt-6 border-t border-border-color text-xs text-gray-600">
+          <p>
+            &copy; {new Date().getFullYear()} BattleBooyah. All Rights
+            Reserved. Made with ❤️ in Ranchi.
+          </p>
+        </div>
+      </div>
+    ) : (
+      // --- DESKTOP FOOTER ---
+      <div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="col-span-1 md:col-span-2">
+            <h3 className="text-3xl font-display font-bold text-gradient-animated">
+              Battle
+              <span className="text-gradient-animated">Booyah</span>
+            </h3>
+            <p className="mt-2 text-gray-500 max-w-sm">
+              India's premier esports destination. Compete, win, and
+              rise to the top of the leaderboards.
+            </p>
+            <div className="flex gap-4 mt-4">
+              <a
+                href="https://www.instagram.com/im_arunkr/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-gray-500 hover:text-blue-400 transition"
+              >
+                <Instagram />
+              </a>
+              <a
+                href="https://github.com/im-arunkr"  // <- GitHub link added
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="text-gray-500 hover:text-blue-400 transition"
+              >
+                <Github />
+              </a>
+              <a
+                href="https://www.youtube.com/@arungaming4323"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Youtube"
+                className="text-gray-500 hover:text-blue-400 transition"
+              >
+                <Youtube />
+              </a>
+            </div>
           </div>
-        </footer>
+          <div>
+            <h4 className="font-bold text-white tracking-wider">
+              Quick Links
+            </h4>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <a href="#gamemodes" className="text-gray-500 hover:text-white transition">
+                  Game Modes
+                </a>
+              </li>
+              <li>
+                <a href="#create" className="text-gray-500 hover:text-white transition">
+                  Create Contest
+                </a>
+              </li>
+              <li>
+                <a href="#tournaments" className="text-gray-500 hover:text-white transition">
+                  Tournaments
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-bold text-white tracking-wider">
+              Legal
+            </h4>
+            <ul className="mt-4 space-y-2">
+              <li>
+                <a href="/terms" className="text-gray-500 hover:text-white transition">
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href="/privacy" className="text-gray-500 hover:text-white transition">
+                  Privacy Policy
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-12 py-6 border-t border-border-color text-center text-gray-600">
+          <p>
+            &copy; {new Date().getFullYear()} BattleBooyah. All Rights
+            Reserved. Made with ❤️ in Ranchi.
+          </p>
+        </div>
+      </div>
+    )}
+  </div>
+</footer>
+
       </div>
     </>
   );

@@ -97,10 +97,7 @@ const ClashSquadPage = () => {
 
         {/* Main */}
         <main className="container mx-auto px-6 pt-28 pb-16 text-center flex flex-col items-center">
-          <h1 className="text-5xl md:text-7xl font-display uppercase tracking-wider text-gradient-animated">
-            Clash Squad Arena
-          </h1>
-          <p className="mt-2 text-lg text-gray-400">Intense 4v4 combat. Coming Soon!</p>
+          
 
           {/* Voting Box */}
           <div className="mt-12 p-8 bg-[#121218] border border-[#27272a] rounded-xl max-w-2xl w-full shadow-lg">

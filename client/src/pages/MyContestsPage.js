@@ -298,7 +298,7 @@ const MyContestsPage = () => {
                 </header>
 
                 <main className="container mx-auto px-6 pt-24 pb-16">
-                    <h1 className="text-4xl md:text-5xl font-display uppercase tracking-wider text-center">My Contests</h1>
+                    
                     <div className="mt-8 border-b border-[#27272a] flex justify-center">
                         <div className="flex items-center gap-4 md:gap-8">
                             {["Live", "Upcoming", "Finished"].map((tab) => (
