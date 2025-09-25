@@ -9,6 +9,12 @@ const path = require('path'); // Core Node.js module
 // File imports
 const connectDB = require('./config/db');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+const contestRoutes = require('./routes/contestRoutes');
+const voteRoutes = require('./routes/voteRoutes');
+
 
 // ==========================================================
 // Initial Setup
@@ -21,15 +27,17 @@ const app = express();
 // Core Middlewares
 // ==========================================================
 app.use(express.json()); // To accept JSON data in the body
-app.use(helmet());       // Use helmet to set security headers
+app.use(helmet());       // Use helmet to set security headers
 
-// CORS Setup (your existing setup is great)
+// CORS Setup
 const allowedOrigins = [
     'http://localhost:3000',
+    'https://battle-booyah123.vercel.app', // <-- YEH LINE ADD KI GAYI HAI
     process.env.CORS_ORIGIN
 ];
 const corsOptions = {
     origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -56,29 +64,24 @@ app.get('/api', (req, res) => {
 });
 
 // Your application's routes
-app.use('/api/admin', require('./routes/adminRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/transactions', require('./routes/transactionRoutes'));
-app.use('/api/contests', require('./routes/contestRoutes'));
-app.use('/api/votes', require('./routes/voteRoutes')); // <-- THIS NEW LINE IS ADDED
+app.use('/api/admin', adminRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/transactions', transactionRoutes);
+app.use('/api/contests', contestRoutes);
+app.use('/api/votes', voteRoutes);
 
 
 // ==========================================================
 // Production Deployment Setup
 // ==========================================================
-// This section will serve the frontend's static files (the 'build' folder)
-// when the application is in production mode.
 if (process.env.NODE_ENV === 'production') {
-    // This assumes your frontend is in a 'client' folder. Adjust if necessary.
     const buildPath = path.join(__dirname, '/client/build');
     app.use(express.static(buildPath));
 
-    // For any route that is not an API route, send the frontend's index.html
     app.get('*', (req, res) =>
         res.sendFile(path.resolve(buildPath, 'index.html'))
     );
 } else {
-    // A simple root route for development
     app.get('/', (req, res) => {
         res.send('API is running... (Development Mode)');
     });
@@ -87,7 +90,6 @@ if (process.env.NODE_ENV === 'production') {
 // ==========================================================
 // Custom Error Handling
 // ==========================================================
-// These must be the LAST app.use() calls
 app.use(notFound);
 app.use(errorHandler);
 
