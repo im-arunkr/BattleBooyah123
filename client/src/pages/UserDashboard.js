@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api"; // UPDATED: We only need this one
-import { Instagram, Youtube, Github } from 'lucide-react';
+import api from "../api"; 
+import {
+  Instagram,
+  Youtube,
+  Github,
+  Wallet,
+  Skull,
+  Swords,
+  Crown,
+  Loader2,
+} from "lucide-react";
 
 import BottomNav from "../components/BottomNav";
 
@@ -86,14 +95,10 @@ const UserDashboard = () => {
     }
   };
 
- useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        // --- THIS IS THE CORRECTED PART ---
-        // We now use the smart 'api' helper, which automatically has the
-        // correct URL and authorization token.
         const userResponse = await api.get("/api/users/me");
-        
         setUser(userResponse.data);
       } catch (error) {
         console.error("Failed to fetch user data", error);
@@ -122,13 +127,13 @@ const UserDashboard = () => {
         "https://images.pexels.com/photos/15091942/pexels-photo-15091942/free-photo-of-man-in-a-gas-mask-and-a-black-hoodie.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     },
     {
-  icon: <Crown size={52} className="text-yellow-400" />,
-  title: "Lone Wolf",
-  desc: "A pure test of skill. Raw aim decides the winner.",
-  imageUrl: "https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-  route: "/games/lone-wolf",
-}
-
+      icon: <Crown size={52} className="text-yellow-400" />,
+      title: "Lone Wolf",
+      desc: "A pure test of skill. Raw aim decides the winner.",
+      imageUrl:
+        "https://images.pexels.com/photos/8100784/pexels-photo-8100784.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      route: "/games/lone-wolf",
+    },
   ];
 
   const creatableModes = [
@@ -160,7 +165,7 @@ const UserDashboard = () => {
     @keyframes gradient-shine { to { background-position: 300% center; } }
     .card-sharp { background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 0.5rem; position: relative; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; height: 100%; }
     .card-sharp:hover { transform: translateY(-8px) scale(1.02); border-color: #555; }
-    .angled-section { position: relative; padding: 3rem 0; } /* reduced from 5rem */
+    .angled-section { position: relative; padding: 3rem 0; } 
     .angled-section::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-secondary); transform: skewY(-2deg); z-index: -1; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -183,7 +188,6 @@ const UserDashboard = () => {
     <>
       <style>{customStyles}</style>
       <div className="bg-primary text-gray-300 font-sans">
-        {/* Centered Notification */}
         {notification && <div className="toast-center">{notification}</div>}
 
         {/* Header */}
@@ -304,182 +308,63 @@ const UserDashboard = () => {
           </div>
         </main>
 
-      {/* Footer */}
-<footer className="bg-black border-t border-border-color pt-12 pb-8">
-  <div className="container mx-auto px-6">
-    {isMobile ? (
-      // --- MOBILE FOOTER ---
-      <div className="text-center text-gray-500">
-        <h3 className="text-3xl font-display font-bold text-gradient-animated">
-          Battle<span className="text-gradient-animated">Booyah</span>
-        </h3>
-        <p className="mt-2 max-w-sm mx-auto text-sm">
-          India's premier esports destination. Compete, win, and rise
-          to the top.
-        </p>
-
-        <div className="flex justify-center gap-8 my-8 text-sm font-semibold">
-          <ul className="space-y-3 text-left">
-            <li>
-              <a href="#gamemodes" className="hover:text-white transition">
-                Game Modes
-              </a>
-            </li>
-            <li>
-              <a href="#create" className="hover:text-white transition">
-                Create Contest
-              </a>
-            </li>
-            <li>
-              <a href="#tournaments" className="hover:text-white transition">
-                Tournaments
-              </a>
-            </li>
-          </ul>
-          <ul className="space-y-3 text-left">
-            <li>
-              <a href="/terms" className="hover:text-white transition">
-                Terms of Service
-              </a>
-            </li>
-            <li>
-              <a href="/privacy" className="hover:text-white transition">
-                Privacy Policy
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="flex justify-center gap-6">
-          <a
-            href="https://www.instagram.com/im_arunkr/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-            className="hover:text-blue-400 transition"
-          >
-            <Instagram />
-          </a>
-          <a
-            href="https://github.com/im-arunkr"  // <- GitHub link added
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="hover:text-blue-400 transition"
-          >
-            <Github />
-          </a>
-          <a
-            href="https://www.youtube.com/@arungaming4323"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Youtube"
-            className="hover:text-blue-400 transition"
-          >
-            <Youtube />
-          </a>
-        </div>
-        <div className="mt-8 pt-6 border-t border-border-color text-xs text-gray-600">
-          <p>
-            &copy; {new Date().getFullYear()} BattleBooyah. All Rights
-            Reserved. Made with ❤️ in Ranchi.
-          </p>
-        </div>
-      </div>
-    ) : (
-      // --- DESKTOP FOOTER ---
-      <div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-2">
-            <h3 className="text-3xl font-display font-bold text-gradient-animated">
-              Battle
-              <span className="text-gradient-animated">Booyah</span>
-            </h3>
-            <p className="mt-2 text-gray-500 max-w-sm">
-              India's premier esports destination. Compete, win, and
-              rise to the top of the leaderboards.
-            </p>
-            <div className="flex gap-4 mt-4">
-              <a
-                href="https://www.instagram.com/im_arunkr/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="text-gray-500 hover:text-blue-400 transition"
-              >
-                <Instagram />
-              </a>
-              <a
-                href="https://github.com/im-arunkr"  // <- GitHub link added
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                className="text-gray-500 hover:text-blue-400 transition"
-              >
-                <Github />
-              </a>
-              <a
-                href="https://github.com/im-arunkr"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Youtube"
-                className="text-gray-500 hover:text-blue-400 transition"
-              >
-                <Youtube />
-              </a>
-            </div>
+        {/* Footer */}
+        <footer className="bg-black border-t border-border-color pt-12 pb-8">
+          <div className="container mx-auto px-6">
+            {isMobile ? (
+              <div className="text-center text-gray-500">
+                <h3 className="text-3xl font-display font-bold text-gradient-animated">
+                  Battle<span className="text-gradient-animated">Booyah</span>
+                </h3>
+                <p className="mt-2 max-w-sm mx-auto text-sm">
+                  India's premier esports destination. Compete, win, and rise
+                  to the top.
+                </p>
+                <div className="flex justify-center gap-6 mt-6">
+                  <a
+                    href="https://www.instagram.com/im_arunkr/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Instagram />
+                  </a>
+                  <a
+                    href="https://github.com/im-arunkr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github />
+                  </a>
+                  <a
+                    href="https://www.youtube.com/@arungaming4323"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Youtube />
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="col-span-1 md:col-span-2">
+                  <h3 className="text-3xl font-display font-bold text-gradient-animated">
+                    Battle
+                    <span className="text-gradient-animated">Booyah</span>
+                  </h3>
+                  <p className="mt-2 text-gray-500 max-w-sm">
+                    India's premier esports destination. Compete, win, and
+                    rise to the top of the leaderboards.
+                  </p>
+                  <div className="flex gap-4 mt-4">
+                    <Instagram />
+                    <Github />
+                    <Youtube />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <div>
-            <h4 className="font-bold text-white tracking-wider">
-              Quick Links
-            </h4>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <a href="#gamemodes" className="text-gray-500 hover:text-white transition">
-                  Game Modes
-                </a>
-              </li>
-              <li>
-                <a href="#create" className="text-gray-500 hover:text-white transition">
-                  Create Contest
-                </a>
-              </li>
-              <li>
-                <a href="#tournaments" className="text-gray-500 hover:text-white transition">
-                  Tournaments
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-white tracking-wider">
-              Legal
-            </h4>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <a href="/terms" className="text-gray-500 hover:text-white transition">
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="/privacy" className="text-gray-500 hover:text-white transition">
-                  Privacy Policy
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="mt-12 py-6 border-t border-border-color text-center text-gray-600">
-          <p>
-            &copy; {new Date().getFullYear()} BattleBooyah. All Rights
-            Reserved. Made with ❤️ in Ranchi.
-          </p>
-        </div>
-      </div>
-    )}
-  </div>
-</footer>
-
+        </footer>
 
         <BottomNav />
       </div>
