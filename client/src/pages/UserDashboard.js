@@ -94,31 +94,24 @@ const UserDashboard = () => {
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("user_token");
-      if (!token) {
-        navigate("/login");
-        return;
-      }
-      const api = axios.create({
-        headers: { Authorization: `Bearer ${token}` },
-      });
       try {
-
-
+        // --- THIS IS THE CORRECTED PART ---
+        // We now use the smart 'api' helper, which automatically has the
+        // correct URL and authorization token.
         const userResponse = await api.get("/api/users/me");
-
-
-
+        
         setUser(userResponse.data);
-        setLoading(false);
       } catch (error) {
         console.error("Failed to fetch user data", error);
         localStorage.removeItem("user_token");
         navigate("/login");
+      } finally {
+        setLoading(false);
       }
     };
+    
     fetchData();
   }, [navigate]);
 
