@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import api from "../api"; // UPDATED: Now imports our smart api helper
+import api from "../api";
 import {
   Loader2,
   ArrowLeft,
   Wallet,
-  ListChecks,
   Gamepad2,
-  LogOut,
-  User,
   ChevronDown,
-  Trophy,
   XCircle,
   CheckCircle2,
 } from "lucide-react";
 import BottomNav from "../components/BottomNav";
 
-// --- Join Form Modal (Compact Version) ---
+// --- Join Form Modal (UPDATED for better size and text) ---
 const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
   const teamSizeMap = { Solo: 1, Duo: 2, Squad: 4 };
   const teamSize = teamSizeMap[contest.teamType] || 1;
@@ -72,12 +68,9 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
     setIsChecking(true);
     try {
       const userIdsToCheck = playerDetails.map((p) => p.userId);
-      // UPDATED: API call now uses the 'api' helper
       const response = await api.post(
         `/api/contests/${contest._id}/check-participants`,
-        {
-          userIds: userIdsToCheck,
-        },
+        { userIds: userIdsToCheck },
       );
 
       const { existingIds } = response.data;
@@ -112,37 +105,40 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
     (contest.teamType === "Solo" || teamName.trim());
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-3">
-      <div className="card-sharp max-w-sm w-full p-4">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      {/* Increased max-width and padding */}
+      <div className="card-sharp max-w-md w-full p-6">
         <div className="text-center">
-          <Gamepad2 size={28} className="mx-auto text-[var(--color-blue)]" />
-          <h2 className="text-xl font-display text-white mt-1">
+          <Gamepad2 size={32} className="mx-auto text-[var(--color-blue)]" />
+          {/* Increased heading size */}
+          <h2 className="text-2xl font-display text-white mt-2">
             Enter Details
           </h2>
         </div>
 
         {(contest.teamType === "Duo" || contest.teamType === "Squad") && (
-          <div className="mt-2">
+          <div className="mt-4">
             <input
               type="text"
               placeholder="Team Name"
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
-              className="input-field py-2 text-sm"
+              // Increased text size and padding
+              className="input-field py-2.5 text-base"
             />
           </div>
         )}
 
-        <div className="mt-2 max-h-[28vh] overflow-y-auto space-y-2 hide-scrollbar pr-1">
+        <div className="mt-4 max-h-[35vh] overflow-y-auto space-y-3 hide-scrollbar pr-2">
           {playerDetails.map((player, index) => (
             <div
               key={index}
-              className="bg-[var(--bg-primary)] p-2 rounded border border-[var(--border-color)]"
+              className="bg-[var(--bg-primary)] p-3 rounded-lg border border-[var(--border-color)]"
             >
-              <h3 className="font-semibold text-[var(--color-blue)] text-sm mb-1">
+              <h3 className="font-semibold text-[var(--color-blue)] text-base mb-2">
                 Player {index + 1}
               </h3>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <input
                   type="text"
                   placeholder="FF Username"
@@ -150,7 +146,7 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
                   onChange={(e) =>
                     handleInputChange(index, "username", e.target.value)
                   }
-                  className="input-field py-2 text-sm"
+                  className="input-field py-2.5 text-base"
                 />
                 <div>
                   <input
@@ -163,7 +159,7 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
                       const value = e.target.value.replace(/\D/g, "");
                       handleInputChange(index, "userId", value);
                     }}
-                    className={`input-field py-2 text-sm ${validationErrors[index] ? "border-red-500" : ""}`}
+                    className={`input-field py-2.5 text-base ${validationErrors[index] ? "border-red-500" : ""}`}
                   />
                   {validationErrors[index] && (
                     <p className="text-red-500 text-xs mt-1">
@@ -176,7 +172,8 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
           ))}
         </div>
 
-        <div className="mt-2 text-xs">
+        {/* Increased text size */}
+        <div className="mt-4 text-sm">
           <label
             htmlFor="confirmation"
             className="flex items-start gap-2 cursor-pointer text-gray-400 p-2 rounded hover:bg-black/20"
@@ -186,7 +183,7 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
               type="checkbox"
               checked={isConfirmed}
               onChange={(e) => setIsConfirmed(e.target.checked)}
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-gray-400 bg-gray-700 text-[var(--color-blue)]"
+              className="mt-1 h-4 w-4 shrink-0 rounded border-gray-400 bg-gray-700 text-[var(--color-blue)]"
             />
             <span>
               I confirm all details are correct & required map is downloaded.
@@ -195,22 +192,23 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
         </div>
 
         {error && (
-          <p className="text-red-500 text-xs mt-2 text-center animate-pulse">
+          <p className="text-red-500 text-sm mt-3 text-center animate-pulse">
             {error}
           </p>
         )}
 
-        <div className="mt-3 flex flex-col items-center gap-1.5">
+        <div className="mt-4 flex flex-col items-center gap-2">
           <button
             onClick={handleSubmit}
             disabled={!canSubmit || isChecking}
-            className={`btn btn-primary w-full py-2 text-sm ${!canSubmit || isChecking ? "" : "btn-pulse"}`}
+            // Increased text size
+            className={`btn btn-primary w-full py-3 text-base ${!canSubmit || isChecking ? "" : "btn-pulse"}`}
           >
-            {isChecking ? <Loader2 className="animate-spin" /> : "Join Contest"}
+            {isChecking ? <Loader2 className="animate-spin" /> : "Confirm & Pay"}
           </button>
           <button
             onClick={onCancel}
-            className="font-medium text-gray-400 hover:text-[var(--color-red)] text-xs"
+            className="font-medium text-gray-400 hover:text-[var(--color-red)] text-sm"
           >
             Cancel
           </button>
@@ -220,29 +218,26 @@ const JoinFormModal = ({ contest, user, onConfirm, onCancel }) => {
   );
 };
 
+// ... InsufficientPointsModal and JoinSuccessModal components remain unchanged ...
 // --- Insufficient Points Modal ---
-const InsufficientPointsModal = ({ onClose, onRecharge }) => (
-  <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div className="card-sharp max-w-sm w-full text-center p-8">
-      <XCircle size={48} className="mx-auto text-[var(--color-red)]" />
-      <h2 className="text-3xl font-display text-white mt-4">
-        Insufficient Points
-      </h2>
-      <p className="text-gray-400 mt-2">
-        You don't have enough points to join this contest. Please recharge to
-        continue.
-      </p>
-      <div className="mt-6 flex flex-col gap-3">
-        <button onClick={onRecharge} className="btn btn-primary">
-          Recharge Now
-        </button>
-        <button onClick={onClose} className="btn btn-secondary">
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-);
+const InsufficientPointsModal = ({ onClose }) => {
+    const phoneNumber = "919608039938";
+    const message = "Recharge";
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    return (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="card-sharp max-w-sm w-full text-center p-8">
+                <XCircle size={48} className="mx-auto text-[var(--color-red)]" />
+                <h2 className="text-3xl font-display text-white mt-4">Insufficient Points</h2>
+                <p className="text-gray-400 mt-2">You don't have enough points to join this contest. Please recharge to continue.</p>
+                <div className="mt-6 flex flex-col gap-3">
+                    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">Recharge Now</a>
+                    <button onClick={onClose} className="btn btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 // --- Join Success Modal ---
 const JoinSuccessModal = ({ onClose }) => (
@@ -266,8 +261,19 @@ const JoinSuccessModal = ({ onClose }) => (
   </div>
 );
 
-// --- Contest Detail Page ---
-// --- Contest Detail Page ---
+// --- Joining Loader Modal ---
+const JoiningLoaderModal = () => (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="flex flex-col items-center">
+        <Loader2 size={48} className="text-white animate-spin" />
+        <p className="text-white text-lg font-semibold mt-4">
+          Joining Contest...
+        </p>
+      </div>
+    </div>
+);
+
+
 const ContestDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -276,14 +282,13 @@ const ContestDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [showPrize, setShowPrize] = useState(true);
   const [showJoinModal, setShowJoinModal] = useState(false);
-  const [showInsufficientPointsModal, setShowInsufficientPointsModal] =
-    useState(false);
+  const [showInsufficientPointsModal, setShowInsufficientPointsModal] = useState(false);
   const [showJoinSuccessModal, setShowJoinSuccessModal] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // UPDATED: API calls now use the 'api' helper
         const [userResponse, contestResponse] = await Promise.all([
           api.get("/api/users/me"),
           api.get(`/api/contests/${id}`),
@@ -311,8 +316,8 @@ const ContestDetailPage = () => {
 
   const handleConfirmJoin = async ({ teamName, playerDetails }) => {
     setShowJoinModal(false);
+    setIsJoining(true);
     try {
-        // UPDATED: API call now uses the 'api' helper
         await api.post(`/api/contests/${id}/join`, {
             teamType: contest.teamType,
             teamName,
@@ -323,21 +328,12 @@ const ContestDetailPage = () => {
         });
         setShowJoinSuccessModal(true);
     } catch (error) {
-        // We will show the error in the modal, but alert is a backup
-        alert(
-            "Failed to join contest: " +
-            (error.response?.data?.message || "Server error"),
-        );
-        // Re-throw the error so the modal can catch it
-        throw error; 
+        alert("Failed to join contest: " + (error.response?.data?.message || "Server error"));
+        throw error;
+    } finally {
+        setIsJoining(false);
     }
   };
-
-  const handleLogout = () => {
-    localStorage.removeItem("user_token");
-    navigate("/login");
-  };
-
 
   const customStyles = `
         @import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;700&family=Inter:wght@400;600;700&display=swap');
@@ -374,7 +370,7 @@ const ContestDetailPage = () => {
         .btn-premium:active { transform: translateY(-1px) scale(0.98); }
         .btn-premium:disabled { background: linear-gradient(90deg, #555, #333); cursor: not-allowed; opacity: 0.7; transform: none; box-shadow: none; }
         .btn-premium:disabled::after { display: none; }
-    `;
+  `;
 
   if (loading || !contest || !user) {
     return (
@@ -387,7 +383,7 @@ const ContestDetailPage = () => {
     );
   }
 
-  const hasJoined = false; // always let backend handle
+  const hasJoined = false;
   const prizeList = contest?.prizeBreakup
     ? contest.prizeBreakup
         .split(",")
@@ -399,6 +395,7 @@ const ContestDetailPage = () => {
 
   return (
     <>
+      {isJoining && <JoiningLoaderModal />}
       {showJoinModal && (
         <JoinFormModal
           contest={contest}
@@ -408,13 +405,10 @@ const ContestDetailPage = () => {
         />
       )}
       {showInsufficientPointsModal && (
-        <InsufficientPointsModal
-          onClose={() => setShowInsufficientPointsModal(false)}
-          onRecharge={() => navigate("/recharge")}
-        />
+        <InsufficientPointsModal onClose={() => setShowInsufficientPointsModal(false)} />
       )}
       {showJoinSuccessModal && (
-        <JoinSuccessModal onClose={() => setShowJoinSuccessModal(false)} />
+        <JoinSuccessModal onClose={() => navigate('/my-contests')} />
       )}
 
       <style>{customStyles}</style>
@@ -473,109 +467,36 @@ const ContestDetailPage = () => {
                 .replace(/ (\d{4}),/, ", $1 at")}
             </p>
           </div>
-          {/* The rest of the layout remains the same... */}
           <div className="hidden md:block">
             <div className="mt-4 grid grid-cols-5 gap-2 text-center">
-              <div className="p-1 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">GAME</p>
-                <p className="text-sm font-bold text-gray-100">
-                  {contest.gameMode}
-                </p>
-              </div>
-              <div className="p-1.5 glass-card rounded-md text-center">
-                <p className="text-xs text-gray-400">MAP</p>
-                <p className="text-base font-bold text-gray-100">
-                  {contest.map}
-                </p>
-              </div>
-              <div className="p-1 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">MODE</p>
-                <p className="text-sm font-bold text-gray-100">
-                  {contest.teamType}
-                </p>
-              </div>
-              <div className="p-1 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">VIEW</p>
-                <p className="text-sm font-bold text-gray-100">
-                  {contest.viewType}
-                </p>
-              </div>
-              <div className="p-1.5 glass-card rounded-md text-center">
-                <p className="text-xs text-gray-400">PARTICIPANTS</p>
-                <p className="text-base font-bold text-gray-100">
-                  {contest.players.length} / {contest.totalParticipants}
-                </p>
-              </div>
+                <div className="p-1 glass-card rounded-md"><p className="text-[10px] text-gray-400">GAME</p><p className="text-sm font-bold text-gray-100">{contest.gameMode}</p></div>
+                <div className="p-1.5 glass-card rounded-md text-center"><p className="text-xs text-gray-400">MAP</p><p className="text-base font-bold text-gray-100">{contest.map}</p></div>
+                <div className="p-1 glass-card rounded-md"><p className="text-[10px] text-gray-400">MODE</p><p className="text-sm font-bold text-gray-100">{contest.teamType}</p></div>
+                <div className="p-1 glass-card rounded-md"><p className="text-[10px] text-gray-400">VIEW</p><p className="text-sm font-bold text-gray-100">{contest.viewType}</p></div>
+                <div className="p-1.5 glass-card rounded-md text-center"><p className="text-xs text-gray-400">PARTICIPANTS</p><p className="text-base font-bold text-gray-100">{contest.players.length} / {contest.totalParticipants}</p></div>
             </div>
             <div className="mt-3 flex justify-center">
-              <div className="grid grid-cols-3 gap-2 w-full max-w-lg">
-                <div className="p-1 glass-card rounded-md text-center">
-                  <p className="text-[10px] text-gray-400">ENTRY</p>
-                  <p className="text-sm font-bold text-[var(--color-blue)]">
-                    ₹{contest.entryFee}
-                  </p>
+                <div className="grid grid-cols-3 gap-2 w-full max-w-lg">
+                    <div className="p-1 glass-card rounded-md text-center"><p className="text-[10px] text-gray-400">ENTRY</p><p className="text-sm font-bold text-[var(--color-blue)]">₹{contest.entryFee}</p></div>
+                    <div className="p-1.5 glass-card rounded-md text-center"><p className="text-[10px] text-gray-400">PER KILL</p><p className="text-sm font-bold text-green-400">₹{contest.perKillReward}</p></div>
+                    <div className="p-1 glass-card rounded-md text-center"><p className="text-[10px] text-gray-400">PRIZE</p><p className="text-sm font-bold text-purple-400">₹{contest.totalPrize}</p></div>
                 </div>
-                <div className="p-1.5 glass-card rounded-md text-center">
-                  <p className="text-[10px] text-gray-400">PER KILL</p>
-                  <p className="text-sm font-bold text-green-400">
-                    ₹{contest.perKillReward}
-                  </p>
-                </div>
-                <div className="p-1 glass-card rounded-md text-center">
-                  <p className="text-[10px] text-gray-400">PRIZE</p>
-                  <p className="text-sm font-bold text-purple-400">
-                    ₹{contest.totalPrize}
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
           <div className="md:hidden mt-4 space-y-3">
             <div className="grid grid-cols-3 gap-2 w-full text-center">
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">GAME</p>
-                <p className="text-sm font-bold">{contest.gameMode}</p>
-              </div>
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">MAP</p>
-                <p className="text-sm font-bold">{contest.map}</p>
-              </div>
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">MODE</p>
-                <p className="text-sm font-bold">{contest.teamType}</p>
-              </div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">GAME</p><p className="text-sm font-bold">{contest.gameMode}</p></div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">MAP</p><p className="text-sm font-bold">{contest.map}</p></div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">MODE</p><p className="text-sm font-bold">{contest.teamType}</p></div>
             </div>
             <div className="grid grid-cols-3 gap-2 w-[70%] mx-auto text-center">
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">ENTRY</p>
-                <p className="text-sm font-bold text-[var(--color-blue)]">
-                  ₹{contest.entryFee}
-                </p>
-              </div>
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">PER KILL</p>
-                <p className="text-sm font-bold text-green-400">
-                  ₹{contest.perKillReward}
-                </p>
-              </div>
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">PRIZE</p>
-                <p className="text-sm font-bold text-purple-400">
-                  ₹{contest.totalPrize}
-                </p>
-              </div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">ENTRY</p><p className="text-sm font-bold text-[var(--color-blue)]">₹{contest.entryFee}</p></div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">PER KILL</p><p className="text-sm font-bold text-green-400">₹{contest.perKillReward}</p></div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">PRIZE</p><p className="text-sm font-bold text-purple-400">₹{contest.totalPrize}</p></div>
             </div>
             <div className="grid grid-cols-2 gap-2 w-[40%] mx-auto text-center">
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">SPOTS</p>
-                <p className="text-sm font-bold">
-                  {contest.players.length}/{contest.totalParticipants}
-                </p>
-              </div>
-              <div className="p-2 glass-card rounded-md">
-                <p className="text-[10px] text-gray-400">VIEW</p>
-                <p className="text-sm font-bold">{contest.viewType}</p>
-              </div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">SPOTS</p><p className="text-sm font-bold">{contest.players.length}/{contest.totalParticipants}</p></div>
+                <div className="p-2 glass-card rounded-md"><p className="text-[10px] text-gray-400">VIEW</p><p className="text-sm font-bold">{contest.viewType}</p></div>
             </div>
           </div>
           <div className="mt-8 flex flex-col items-center">
@@ -594,26 +515,15 @@ const ContestDetailPage = () => {
                 <table className="w-full text-center">
                   <thead className="border-b border-[var(--border-color)]">
                     <tr>
-                      <th className="py-1 font-semibold text-gray-400 text-xs">
-                        Standing
-                      </th>
-                      <th className="py-1 font-semibold text-gray-400 text-xs">
-                        Prize (₹)
-                      </th>
+                        <th className="py-1 font-semibold text-gray-400 text-xs">Standing</th>
+                        <th className="py-1 font-semibold text-gray-400 text-xs">Prize (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
                     {prizeList.map((item) => (
-                      <tr
-                        key={item.rank}
-                        className="border-b border-[var(--border-color)]/50 last:border-b-0 text-sm"
-                      >
-                        <td className="py-1.5 text-cyan-400 font-semibold">
-                          Rank {item.rank}
-                        </td>
-                        <td className="py-1.5 font-bold text-purple-400">
-                          ₹{item.prize}
-                        </td>
+                      <tr key={item.rank} className="border-b border-[var(--border-color)]/50 last:border-b-0 text-sm">
+                        <td className="py-1.5 text-cyan-400 font-semibold">Rank {item.rank}</td>
+                        <td className="py-1.5 font-bold text-purple-400">₹{item.prize}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -621,19 +531,31 @@ const ContestDetailPage = () => {
               </div>
             )}
           </div>
-          <div className="mt-8 flex justify-center">
-            <button
-              className="btn-premium text-base px-3 py-1 rounded-xl font-bold tracking-wide bg-gradient-to-r from-red-500 to-blue-600 text-white inline-flex items-center justify-center gap-4"
-              disabled={hasJoined}
-              onClick={handleJoinClick}
-            >
-              <span>{hasJoined ? "Already Joined" : "Join Contest"}</span>
-            </button>
-          </div>
-        </main>
+          {/* --- UPDATED Join Contest Button --- */}
+          <div className="mt-6 flex justify-center">
+  <button
+    className="relative overflow-hidden text-base px-6 py-1.5 rounded-full font-bold tracking-wide
+               bg-white
+               shadow-lg shadow-blue-500/50
+               transition-all duration-300 ease-out
+               hover:scale-105 hover:shadow-[0_0_25px_rgba(59,130,246,0.9)]
+               disabled:opacity-50 disabled:cursor-not-allowed"
+    disabled={hasJoined}
+    onClick={handleJoinClick}
+  >
+    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent
+                     animate-[shine_4s_linear_infinite] 
+                     hover:animate-[shine_1.5s_linear_infinite] 
+                     opacity-70 hover:opacity-100 rounded-full"></span>
 
-         {/* Your bottom nav component would go here, or the full nav code */}
-                   <BottomNav />
+    <span className="relative z-10 text-gradient-animated font-display text-lg">
+      {hasJoined ? "Joined" : "Join Now"}
+    </span>
+  </button>
+</div>
+
+        </main>
+        <BottomNav />
       </div>
     </>
   );

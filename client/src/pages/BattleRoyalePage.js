@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api"; // Correctly uses the api helper
-import {
-  Wallet,
-  Loader2,
-  Swords,
-  Tag,
-  Star,
-  Users,
-  MapPin,
-  Clock,
-} from "lucide-react";
+import api from "../api"; 
+import { Wallet, Loader2 } from "lucide-react";
 import BottomNav from "../components/BottomNav";
 
-// --- Ultra-Compact Contest Card component ---
+// --- STEP 1: Import the single contest icon ---
+import contestIcon from '../images/contest-icon.png'; 
+
+// --- Ultra-Compact Contest Card component (UPDATED) ---
 const ContestCard = ({ contest }) => {
   const spotsLeft = contest.totalParticipants - contest.players.length;
   const isFull = spotsLeft <= 0;
@@ -25,11 +19,9 @@ const ContestCard = ({ contest }) => {
   return (
     <div className="w-full max-w-xl mx-auto rounded-xl overflow-hidden bg-[#1e2746] border border-gray-700/50 shadow-lg hover:scale-[1.02] transition-transform duration-300 flex flex-col">
       <div className="flex items-center gap-3 px-3 py-1.5 bg-gradient-to-r from-blue-600 to-cyan-500">
+        {/* --- STEP 2: Use the imported icon here --- */}
         <img
-          src={
-            contest.gameIconUrl ||
-            "https://upload.wikimedia.org/wikipedia/en/e/e7/Free_Fire_game_icon.png"
-          }
+          src={contestIcon}
           alt="game icon"
           className="w-6 h-6 rounded-md"
         />
@@ -40,7 +32,7 @@ const ContestCard = ({ contest }) => {
       <div className="grid grid-cols-3 gap-2 p-2 border-b border-gray-700/50">
         <div className="bg-slate-800/50 rounded-md p-1 text-center shadow">
           <p className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
-            <Tag size={12} /> Entry
+            Entry
           </p>
           <p className="text-xs font-bold text-white mt-0.5">
             {contest.entryFee} PTS
@@ -48,7 +40,7 @@ const ContestCard = ({ contest }) => {
         </div>
         <div className="bg-slate-800/50 rounded-md p-1 text-center shadow">
           <p className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
-            <Star size={12} /> Prize
+            Prize
           </p>
           <p className="text-xs font-bold text-yellow-400 mt-0.5">
             ₹{contest.totalPrize || contest.prizePool}
@@ -56,7 +48,7 @@ const ContestCard = ({ contest }) => {
         </div>
         <div className="bg-slate-800/50 rounded-md p-1 text-center shadow">
           <p className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
-            <Swords size={12} /> Per Kill
+            Per Kill
           </p>
           <p className="text-xs font-bold text-white mt-0.5">
             ₹{contest.perKillReward || 0}
@@ -77,7 +69,7 @@ const ContestCard = ({ contest }) => {
       <div className="grid grid-cols-3 gap-2 p-2">
         <div className="text-center">
           <p className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
-            <Clock size={12} /> Start
+            Start
           </p>
           <p className="text-[11px] font-semibold text-white">
             {new Date(contest.startTime).toLocaleTimeString("en-IN", {
@@ -88,7 +80,7 @@ const ContestCard = ({ contest }) => {
         </div>
         <div className="text-center">
           <p className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
-            <Users size={12} /> Players
+            Players
           </p>
           <p className="text-[11px] font-semibold text-white">
             {contest.totalParticipants}
@@ -96,7 +88,7 @@ const ContestCard = ({ contest }) => {
         </div>
         <div className="text-center">
           <p className="flex items-center justify-center gap-1 text-[10px] text-gray-400">
-            <MapPin size={12} /> Map
+            Map
           </p>
           <p className="text-[11px] font-semibold text-white truncate">
             {contest.map}
@@ -128,8 +120,6 @@ const BattleRoyalePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // --- THIS IS THE UPDATED PART ---
-        // API calls now use the 'api' helper, which sets the base URL and token automatically.
         const [userResponse, contestsResponse] = await Promise.all([
           api.get("/api/users/me"),
           api.get("/api/contests/battle-royale"),
@@ -239,4 +229,3 @@ const BattleRoyalePage = () => {
 };
 
 export default BattleRoyalePage;
-
