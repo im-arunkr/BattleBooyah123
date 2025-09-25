@@ -1,5 +1,3 @@
-// server.js
-
 // Package imports
 const express = require('express');
 const dotenv = require('dotenv');
@@ -62,6 +60,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/transactions', require('./routes/transactionRoutes'));
 app.use('/api/contests', require('./routes/contestRoutes'));
+app.use('/api/votes', require('./routes/voteRoutes')); // <-- THIS NEW LINE IS ADDED
 
 
 // ==========================================================
