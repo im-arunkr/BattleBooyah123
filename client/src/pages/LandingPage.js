@@ -373,7 +373,7 @@ const LandingPage = () => {
                 {isMobile ? (
                     <div className="text-center text-gray-500">
                         <h3 className="text-3xl font-display font-bold text-gradient-animated">Battle<span className="text-gradient-animated">Booyah</span></h3>
-                        <p className="mt-2 max-w-sm mx-auto text-sm">India's premier esports destination. Compete, win, and rise to the top.</p>
+                        <p className="mt-2 max-w-sm mx-auto text-sm">India's premier Esports destination. Compete, win, and rise to the top.</p>
                         <div className="flex justify-center gap-8 my-8 text-sm font-semibold">
                             <ul className="space-y-3 text-left">
                                 <li><a href="#gamemodes" className="hover:text-white transition">Game Modes</a></li>
@@ -399,7 +399,7 @@ const LandingPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                             <div className="col-span-1 md:col-span-2">
                                 <h3 className="text-3xl font-display font-bold text-gradient-animated">Battle<span className="text-gradient-animated">Booyah</span></h3>
-                                <p className="mt-2 text-gray-500 max-w-sm">India's premier esports destination. Compete, win, and rise to the top of the leaderboards.</p>
+                                <p className="mt-2 text-gray-500 max-w-sm">India's premier Esports destination. Compete, win, and rise to the top of the leaderboards.</p>
                                 <div className="flex gap-4 mt-4">
                                     <a href="https://www.instagram.com/im_arunkr/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-500 hover:text-blue-400 transition"><Instagram /></a>
                                     <a href="https://github.com/im-arunkr" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-gray-500 hover:text-blue-400 transition"><Github /></a>
