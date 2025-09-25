@@ -194,7 +194,7 @@ const BattleRoyalePage = () => {
           </div>
         </header>
 
-        <main className="container mx-auto px-6 pt-28 pb-16">
+        <main className="container mx-auto px-6 pt-16 pb-16">
           <div className="text-center">
             
             <div className="mt-12 flex justify-center items-center gap-4 sm:gap-6">

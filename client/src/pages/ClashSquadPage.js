@@ -76,8 +76,8 @@ const ClashSquadPage = () => {
   return (
     <>
       <style>{customStyles}</style>
-      <div className="min-h-screen bg-[#0a0a0f] font-sans text-white pb-24">
-        {/* Header */}
+      <div className="min-h-screen bg-[#0a0a0f] font-sans text-white">
+        {/* Header (No changes here) */}
         <header className="fixed top-0 left-0 w-full z-40 bg-[#0a0a0f]/80 backdrop-blur-md border-b border-[#27272a]">
           <div className="container mx-auto px-6 py-3 flex justify-between items-center">
             <Link
@@ -95,12 +95,13 @@ const ClashSquadPage = () => {
           </div>
         </header>
 
-        {/* Main */}
-        <main className="container mx-auto px-6 pt-28 pb-16 text-center flex flex-col items-center">
+        {/* --- MODIFIED Main Content --- */}
+        {/* We made this a full-height flex container to center the card */}
+        <main className="container mx-auto px-6 min-h-screen flex flex-col items-center justify-center">
           
-
-          {/* Voting Box */}
-          <div className="mt-12 p-8 bg-[#121218] border border-[#27272a] rounded-xl max-w-2xl w-full shadow-lg">
+          {/* --- MODIFIED Voting Box --- */}
+          {/* Removed mt-12 (top margin) to allow for perfect centering */}
+          <div className="p-8 bg-[#121218] border border-[#27272a] rounded-xl max-w-2xl w-full shadow-lg text-center">
             <h2 className="text-2xl font-bold text-white">
               Want to play Clash Squad contests?
             </h2>
@@ -109,10 +110,12 @@ const ClashSquadPage = () => {
             </p>
 
             <div className="mt-6">
+              {/* --- MODIFIED Button --- */}
+              {/* Made button smaller by adjusting padding, text size, and removing w-full */}
               <button
                 onClick={handleVote}
                 disabled={hasVoted || isVoting}
-                className={`w-full max-w-xs mx-auto flex items-center justify-center gap-3 font-bold py-3 px-6 rounded-lg text-lg transition-all duration-300
+                className={`mx-auto flex items-center justify-center gap-2 font-bold py-2 px-4 rounded-lg text-base transition-all duration-300
                   ${
                     hasVoted
                       ? 'bg-green-600 text-white cursor-not-allowed'
@@ -123,11 +126,11 @@ const ClashSquadPage = () => {
                   <Loader2 className="animate-spin" />
                 ) : hasVoted ? (
                   <>
-                    <Check size={24} /> Voted!
+                    <Check size={20} /> Voted!
                   </>
                 ) : (
                   <>
-                    <ThumbsUp size={24} /> Vote for Clash Squad
+                    <ThumbsUp size={20} /> Vote for Clash Squad
                   </>
                 )}
               </button>
