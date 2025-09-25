@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../api'; // UPDATED: Now imports our smart api helper
-import { 
-    Wallet, Loader2, ListChecks, Gamepad2, LogOut, User, Trophy, ThumbsUp, Check, Home 
-} from 'lucide-react';
+import api from '../api';
+import { Wallet, Loader2, ListChecks, Gamepad2, LogOut, User, Trophy, ThumbsUp, Check, Home } from 'lucide-react';
+import BottomNav from '../components/BottomNav';
 
 const LoneWolfPage = () => {
     const navigate = useNavigate();
@@ -18,36 +17,30 @@ const LoneWolfPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // UPDATED: API calls now use the 'api' helper
+                // API calls now use the smart 'api' helper and point to Lone Wolf
                 const [userResponse, voteResponse] = await Promise.all([
-                    api.get("/api/users/me"),
-                    api.get("/api/votes/Lone%20Wolf") // The space must be URL-encoded
+                    api.get('/api/users/me'),
+                    api.get('/api/votes/Lone%20Wolf') // Space is URL-encoded
                 ]);
                 
                 setUser(userResponse.data);
                 setVoteCount(voteResponse.data.totalVotes);
                 setHasVoted(voteResponse.data.hasVoted);
-                
             } catch (error) {
                 console.error("Failed to fetch page data", error);
-                // Fallback for user data if vote API fails for now
-                if (!user) {
-                    localStorage.removeItem("user_token");
-                    navigate("/login");
-                }
+                localStorage.removeItem('user_token');
+                navigate('/login');
             } finally {
                 setLoading(false);
             }
         };
         fetchData();
-    }, [navigate, user]);
+    }, [navigate]);
 
     const handleVote = async () => {
         setIsVoting(true);
         try {
-            // UPDATED: API call now uses the 'api' helper
             const { data } = await api.post('/api/votes/Lone%20Wolf');
-            
             setVoteCount(data.totalVotes);
             setHasVoted(true);
         } catch (error) {
@@ -56,11 +49,6 @@ const LoneWolfPage = () => {
         } finally {
             setIsVoting(false);
         }
-    };
-    
-    const handleLogout = () => {
-        localStorage.removeItem("user_token");
-        navigate("/login");
     };
     
     const customStyles = `
@@ -121,13 +109,7 @@ const LoneWolfPage = () => {
                     </div>
                 </main>
                 
-                <nav className="fixed bottom-0 left-0 w-full bg-black/50 backdrop-blur-xl text-white text-xs font-bold tracking-wider flex justify-around items-center h-20 z-50 border-t border-[#333]">
-                    <Link to="/my-contests" className="group flex flex-col items-center justify-center gap-1 h-full w-full text-gray-500 hover:text-cyan-400 transition-all duration-300 hover:-translate-y-2"><ListChecks size={26} /><span>MY CONTESTS</span></Link>
-                    <Link to="/games" className="group flex flex-col items-center justify-center gap-1 h-full w-full text-cyan-400 transition-all duration-300 hover:-translate-y-2"><Gamepad2 size={26} /><span>GAMES</span></Link>
-                    <Link to="/dashboard" className="group flex flex-col items-center justify-center gap-1 h-full w-full text-gray-500 hover:text-cyan-400 transition-all duration-300 hover:-translate-y-2"><Home size={26} /><span>HOME</span></Link>
-                    <Link to="/winners" className="group flex flex-col items-center justify-center gap-1 h-full w-full text-gray-500 hover:text-cyan-400 transition-all duration-300 hover:-translate-y-2"><Trophy size={26} /><span>WINNERS</span></Link>
-                    <Link to="/account" className="group flex flex-col items-center justify-center gap-1 h-full w-full text-gray-500 hover:text-cyan-400 transition-all duration-300 hover:-translate-y-2"><User size={26} /><span>ACCOUNT</span></Link>
-                </nav>
+                <BottomNav />
             </div>
         </>
     );

@@ -27,7 +27,6 @@ const ClashSquadPage = () => {
                 setUser(userResponse.data);
                 setVoteCount(voteResponse.data.totalVotes);
                 setHasVoted(voteResponse.data.hasVoted);
-
             } catch (error) {
                 console.error("Failed to fetch page data", error);
                 localStorage.removeItem('user_token');

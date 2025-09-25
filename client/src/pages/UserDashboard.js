@@ -111,7 +111,6 @@ const UserDashboard = () => {
         setLoading(false);
       }
     };
-    
     fetchData();
   }, [navigate]);
 
